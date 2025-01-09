@@ -1,17 +1,17 @@
-const apiKey = 'API     密     钥'; // 你的 API 密钥
-const apiDomain = 'API     域     名'; // 自定义 API 域名
-const modelName = '模     型     名     称'; // 模型名称
+const apiKey = 'AIzaSyAP2oSzARft7Hk7I8lpu-6YVqNotJEyl5U'; // 你的 API 密钥
+const apiDomain = 'https://gemini.tech-zer.top'; // 自定义 API 域名
+const modelName = 'gemini-2.0-flash-exp'; // 模型名称
 
-// OpenAI 风格的 API 调用
-async function fetchAIResponse(message) {
+// 修改为流式响应
+async function fetchAIResponse(message, onChunk) {
     const url = `${apiDomain}/v1/chat/completions`;
-
     const data = {
         model: modelName,
         messages: [
-            { role: 'system', content: '请使用中文回复。' }, // 指示 AI 使用中文回复
+            { role: 'system', content: '请使用中文回复。' },
             { role: "user", content: message }
-            ]
+        ],
+        stream: true  // 启用流式输出
     };
 
     try {
@@ -25,16 +25,37 @@ async function fetchAIResponse(message) {
         });
 
         if (!response.ok) {
-             const errorData = await response.json();
-             console.error("API Error:", errorData)
+            const errorData = await response.json();
+            console.error("API Error:", errorData);
             throw new Error(`API 请求失败，状态码: ${response.status}`);
         }
 
-        const responseData = await response.json();
-        // 根据 OpenAI 的响应格式提取 AI 回复
-        return responseData.choices[0].message.content;
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value);
+            const lines = chunk.split('\n');
+
+            for (const line of lines) {
+                if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+                    try {
+                        const data = JSON.parse(line.slice(6));
+                        const content = data.choices[0].delta.content || '';
+                        if (content) {
+                            onChunk(content);
+                        }
+                    } catch (e) {
+                        console.error('Error parsing chunk:', e);
+                    }
+                }
+            }
+        }
     } catch (error) {
         console.error("Error fetching AI response:", error);
-        return "抱歉，无法获取 AI 回复，请稍后重试。";
+        throw error;
     }
 }
