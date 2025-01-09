@@ -1,0 +1,87 @@
+nav {
+    background-color: #007bff; /* 蓝色背景 */
+    color: white;
+    padding: 12px; /* 添加内边距 */
+    border-radius: 20px; /* 更大的圆角 */
+    margin: 15px; /* 与页面边缘留出距离 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+    font-size: 14px; /* 减小导航栏字号 */
+    display: flex;
+    justify-content: space-between; /* 左右布局 */
+}
+
+/* 左侧导航项目 */
+.nav-left {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 8px;
+}
+
+/* 右侧导航项目 */
+.nav-right {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* 所有导航链接的基础样式 */
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* 导航链接悬停效果 */
+nav a:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* 导航链接点击效果 */
+nav a:active {
+    background-color: #004085;
+    transform: translateY(0);
+}
+
+/* 版本号样式 */
+.version {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    padding: 4px 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+/* GitHub链接样式 */
+.github-link {
+    color: white;
+    text-decoration: none;
+    padding: 4px 8px !important;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.github-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: none !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .nav-left, .nav-right {
+        justify-content: center;
+    }
+} 

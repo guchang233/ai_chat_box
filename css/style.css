@@ -1,0 +1,318 @@
+/* 基础页面样式 */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-size: 18px;
+}
+
+/* 聊天容器样式 */
+.chat-container {
+    width: 98%;
+    max-width: none;
+    flex: 1;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: 10px auto;
+}
+
+/* 聊天头部样式 */
+.chat-header {
+    background-color: #007bff;
+    color: white;
+    padding: 8px;
+    text-align: center;
+}
+
+/* 聊天标题样式 */
+.chat-header h1 {
+    font-size: 1.1em;
+    margin: 0;
+}
+
+/* 聊天消息区域样式 */
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-height: 0;
+}
+
+/* 消息气泡基础样式 */
+.message {
+    padding: 8px 12px;
+    margin-bottom: 0;
+    border-radius: 10px;
+    max-width: 75%;
+    clear: both;
+}
+
+/* 用户消息气泡样式 */
+.user-message {
+    background-color: #007bff;
+    color: white;
+    margin-left: auto;
+    margin-bottom: 8px;
+}
+
+/* AI消息气泡样式 */
+.ai-message {
+    background-color: #99ffdd;
+    margin-right: auto;
+    margin-bottom: 8px;
+}
+
+/* 加载中消息样式 */
+.loading-message {
+    background-color: #99ffdd;
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 加载动画样式 */
+.loading-spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #81dabc;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+/* 加载动画关键帧 */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 输入区域样式 */
+.chat-input-area {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    min-height: fit-content;
+}
+
+/* 消息输入框样式 */
+#message-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-right: 12px;
+    resize: none;
+    font-size: 14px;
+    height: 60px;
+    min-height: 60px;
+}
+
+/* 发送按钮样式 */
+#send-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 14px;
+}
+
+/* 发送按钮悬停效果 */
+#send-button:hover {
+    background-color: #0056b3;
+}
+
+/* 发送按钮点击效果 */
+#send-button:active {
+    background-color: #004085;
+}
+
+/* 消息文本样式 */
+.bot-message, .user-message {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* 机器人消息换行处理 */
+.bot-message {
+    white-space: pre-wrap;
+}
+
+/* 用户消息换行处理 */
+.user-message {
+    white-space: pre-wrap;
+}
+
+/* 机器人消息强调文本样式 */
+.bot-message strong {
+    display: block;
+    margin-bottom: 0.5em;
+}
+
+/* AI消息代码块容器样式 */
+.ai-message pre {
+    background-color: #1e1e1e !important;
+    border-radius: 6px;
+    padding: 16px;
+    overflow: auto;
+    position: relative;
+    margin: 1em 0;
+    border: 1px solid #404040;
+}
+
+/* AI消息代码文本样式 */
+.ai-message code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 14px;
+    color: #d4d4d4;
+}
+
+/* AI消息段落样式 */
+.ai-message p {
+    margin: 0 0 16px 0;
+}
+
+/* AI消息列表样式 */
+.ai-message ul, .ai-message ol {
+    margin: 0 0 16px 0;
+    padding-left: 20px;
+}
+
+/* 代码复制按钮样式 */
+.copy-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 8px;
+    background-color: #3c3c3c;
+    color: #cccccc;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: all 0.2s ease;
+}
+
+/* 代码复制按钮悬停效果 */
+.copy-button:hover {
+    opacity: 1;
+    background-color: #505050;
+}
+
+/* 代码复制成功状态样式 */
+.copy-button.copied {
+    background-color: #4ec9b0;
+    color: #1e1e1e;
+}
+
+/* 代码高亮样式 - 关键字 */
+.hljs-keyword {
+    color: #569cd6;
+}
+
+/* 代码高亮样式 - 函数 */
+.hljs-function {
+    color: #dcdcaa;
+}
+
+/* 代码高亮样式 - 字符串 */
+.hljs-string {
+    color: #ce9178;
+}
+
+/* 代码高亮样式 - 数字 */
+.hljs-number {
+    color: #b5cea8;
+}
+
+/* 代码高亮样式 - 注释 */
+.hljs-comment {
+    color: #6a9955;
+    font-style: italic;
+}
+
+/* 代码高亮样式 - 变量 */
+.hljs-variable {
+    color: #9cdcfe;
+}
+
+/* 代码高亮样式 - 函数名 */
+.hljs-title {
+    color: #dcdcaa;
+}
+
+/* 代码高亮样式 - 参数 */
+.hljs-params {
+    color: #9cdcfe;
+}
+
+/* 代码高亮样式 - 内置函数 */
+.hljs-built_in {
+    color: #4ec9b0;
+}
+
+/* 代码高亮样式 - 字面量 */
+.hljs-literal {
+    color: #569cd6;
+}
+
+/* 代码高亮样式 - 运算符 */
+.hljs-operator {
+    color: #d4d4d4;
+}
+
+/* 代码高亮样式 - 类 */
+.hljs-class {
+    color: #4ec9b0;
+}
+
+/* 代码高亮样式 - 属性 */
+.hljs-property {
+    color: #9cdcfe;
+}
+
+/* AI消息行内代码样式 */
+.ai-message p code {
+    background-color: #1e1e1e;
+    padding: 2px 4px;
+    border-radius: 3px;
+    color: #d4d4d4;
+    border: 1px solid #404040;
+}
+
+/* 代码选中效果 */
+.ai-message pre code::selection {
+    background-color: #264f78;
+}
+
+/* 代码块滚动条样式 */
+.ai-message pre::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+}
+
+/* 代码块滚动条滑块样式 */
+.ai-message pre::-webkit-scrollbar-thumb {
+    background-color: #424242;
+    border-radius: 7px;
+    border: 3px solid #1e1e1e;
+}
+
+/* 代码块滚动条轨道样式 */
+.ai-message pre::-webkit-scrollbar-track {
+    background-color: #1e1e1e;
+}
