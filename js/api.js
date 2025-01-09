@@ -1,6 +1,6 @@
-const apiKey = 'AIzaSyAP2oSzARft7Hk7I8lpu-6YVqNotJEyl5U'; // 你的 API 密钥
-const apiDomain = 'https://gemini.tech-zer.top'; // 自定义 API 域名
-const modelName = 'gemini-2.0-flash-exp'; // 模型名称
+const apiKey = 'API     密     钥'; // 你的 API 密钥
+const apiDomain = 'API     域     名'; // 自定义 API 域名
+const modelName = '模     型     名     称'; // 模型名称
 
 // OpenAI 风格的 API 调用
 async function fetchAIResponse(message) {

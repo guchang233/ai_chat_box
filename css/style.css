@@ -68,14 +68,14 @@ body {
 
 /* AI消息气泡样式 */
 .ai-message {
-    background-color: #99ffdd;
+    background-color: #baffe8;
     margin-right: auto;
     margin-bottom: 8px;
 }
 
 /* 加载中消息样式 */
 .loading-message {
-    background-color: #99ffdd;
+    background-color: #baffe8;
     align-self: flex-start;
     display: flex;
     align-items: center;
@@ -85,7 +85,7 @@ body {
 /* 加载动画样式 */
 .loading-spinner {
     border: 4px solid rgba(0, 0, 0, 0.1);
-    border-left-color: #81dabc;
+    border-left-color: #99ffdd;
     border-radius: 50%;
     width: 24px;
     height: 24px;

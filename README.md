@@ -1,0 +1,1 @@
+到/js/api.js中更换apiKEY , apdomain(API地址) , 以及模型名称
