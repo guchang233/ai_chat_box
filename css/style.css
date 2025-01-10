@@ -136,15 +136,17 @@ body {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 6px;
-    margin-right: 12px;
+    margin-right: 0px;
     resize: none;
     font-size: 14px;
-    height: 60px;
-    min-height: 60px;
+    height: 100px;
+    min-height: 100px;
 }
 
 /* 发送按钮样式 */
 #send-button {
+    position: relative;
+    z-index: 1;
     background-color: #007bff;
     color: white;
     border: none;
@@ -153,6 +155,11 @@ body {
     cursor: pointer;
     transition: background-color 0.2s ease;
     font-size: 14px;
+    margin-left: 12px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* 发送按钮悬停效果 */
@@ -343,4 +350,141 @@ body {
     max-width: 75%;
     margin-right: auto;
     margin-bottom: 8px;
+}
+
+/* 停止按钮样式 */
+.stop-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 8px 12px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 14px;
+    min-width: 40px;
+    margin-bottom: 0px;
+    z-index: 10;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 停止按钮悬停效果 */
+.stop-button:hover {
+    background-color: #c82333;
+}
+
+/* 停止按钮点击效果 */
+.stop-button:active {
+    background-color: #ac1929;
+}
+
+/* 输入区域的 div 样式 */
+.chat-input-area > div {
+    display: flex;
+    flex: 1; /* 让 div 占据剩余空间 */
+    align-items: center; /* 垂直居中 */
+}
+
+/* 主题切换按钮容器样式 */
+.theme-toggle-container {
+    display: flex;
+    align-items: center;
+}
+
+/* 主题切换按钮样式 */
+.theme-toggle-button {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+/* 主题切换按钮 - 深色模式 */
+.theme-toggle-button.dark-mode {
+    background-color: #333;
+}
+
+/* 主题切换按钮悬停提示 */
+.theme-toggle-button::before {
+    content: '切换到深色模式';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, 5px);
+    width: auto;
+    height: auto;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    font-size: 12px;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    opacity: 0; /* 初始隐藏 */
+    transition: opacity 0.2s ease; /* 添加过渡效果 */
+}
+
+.theme-toggle-button:hover::before {
+    opacity: 1; /* 悬停时显示 */
+}
+
+.theme-toggle-button.dark-mode:hover::before {
+    content: '切换到浅色模式';
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    opacity: 1; /* 悬停时显示 */
+}
+
+/* 深色模式下的 body 样式 */
+body.dark-mode {
+    background-color: #1e1e1e;
+    color: #fff;
+}
+
+/* 深色模式下的聊天容器样式 */
+.chat-container.dark-mode {
+    background-color: #2d2d2d;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+}
+
+/* 深色模式下的聊天头部样式 */
+.chat-header.dark-mode {
+    background-color: #333;
+    color: #fff;
+}
+
+/* 深色模式下的消息气泡样式 */
+.user-message.dark-mode {
+    background-color: #007bff !important;
+    color: #fff !important;
+}
+
+/* 深色模式下的 AI 消息气泡样式 */
+.ai-message.dark-mode, .chat-messages.dark-mode .ai-message {
+    background-color: #444 !important;
+    color: #fff !important;
+}
+
+/* 深色模式下的加载中消息样式 */
+.loading-message.dark-mode {
+    background-color: #444;
+}
+
+/* 深色模式下的输入框样式 */
+.chat-input-area.dark-mode #message-input {
+    background-color: #444 !important;
+    color: #fff !important;
+    border-color: #666 !important;
 }

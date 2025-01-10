@@ -32,8 +32,9 @@ async function fetchAIResponse(message, onChunk) {
 
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
+        let stop = false; // 用于控制 AI 输出的暂停和恢复
 
-        while (true) {
+        while (!stop) {
             const { done, value } = await reader.read();
             if (done) break;
 
