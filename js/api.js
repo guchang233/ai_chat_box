@@ -1,16 +1,22 @@
-const apiKey = 'AIzaSyAP2oSzARft7Hk7I8lpu-6YVqNotJEyl5U'; // 你的 API 密钥
-const apiDomain = 'https://gemini.tech-zer.top'; // 自定义 API 域名
-const modelName = 'gemini-2.0-flash-exp'; // 模型名称
+const apiKey = 'API 密钥'; // 你的 API 密钥
+const apiDomain = 'API 域名'; // 自定义 API 域名
+const modelName = '模型名称'; // 模型名称
 
 // 修改为流式响应
-async function fetchAIResponse(message, onChunk) {
+async function fetchAIResponse(message, onChunk, fileData = null) {
     const url = `${apiDomain}/v1/chat/completions`;
+    const messages = [
+        { role: 'system', content: '请使用中文回复。' },
+    ];
+    if (message) {
+        messages.push({ role: "user", content: message });
+    }
+    if (fileData) {
+        messages.push({ role: "user", content: `data:image/png;base64,${fileData}` });
+    }
     const data = {
         model: modelName,
-        messages: [
-            { role: 'system', content: '请使用中文回复。' },
-            { role: "user", content: message }
-        ],
+        messages: messages,
         stream: true  // 启用流式输出
     };
 
@@ -36,7 +42,7 @@ async function fetchAIResponse(message, onChunk) {
 
         while (!stop) {
             const { done, value } = await reader.read();
-            if (done) break;
+            if (done || stop) break; // 如果 done 或 stop 为 true，则结束循环
 
             const chunk = decoder.decode(value);
             const lines = chunk.split('\n');

@@ -1,490 +1,555 @@
-/* 基础页面样式 */
+/* 页面基础样式 */
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    font-size: 18px;
+    font-family: 'Arial', sans-serif; /* 设置字体 */
+    margin: 0; /* 清除默认外边距 */
+    padding: 0; /* 清除默认内边距 */
+    background-color: #f4f4f4; /* 设置背景颜色 */
+    height: 100vh; /* 设置高度为视口高度 */
+    display: flex; /* 使用 Flexbox 布局 */
+    flex-direction: column; /* 垂直排列子元素 */
+    font-size: 18px; /* 设置字体大小 */
 }
 
 /* 聊天容器样式 */
 .chat-container {
-    width: 98%;
-    max-width: none;
-    flex: 1;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    margin: 10px auto;
+    width: 98%; /* 设置宽度 */
+    max-width: none; /* 取消最大宽度限制 */
+    flex: 1; /* 允许容器扩展以填充可用空间 */
+    background-color: #fff; /* 设置背景颜色 */
+    border-radius: 12px; /* 设置边框圆角 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); /* 设置阴影效果 */
+    display: flex; /* 使用 Flexbox 布局 */
+    flex-direction: column; /* 垂直排列子元素 */
+    overflow: hidden; /* 隐藏溢出内容 */
+    margin: 10px auto; /* 设置外边距，水平居中 */
 }
 
 /* 聊天头部样式 */
 .chat-header {
-    background-color: #007bff;
-    color: white;
-    padding: 8px;
-    text-align: center;
+    background-color: #007bff; /* 设置背景颜色 */
+    color: white; /* 设置文字颜色 */
+    padding: 5px; /* 设置内边距 */
+    text-align: center; /* 设置文本居中 */
+    display: flex; /* 使用 Flexbox 布局 */
+    align-items: center; /* 垂直居中对齐 */
+    justify-content: center; /* 水平居中对齐 */
 }
 
 /* 聊天标题样式 */
 .chat-header h1 {
-    font-size: 1.1em;
-    margin: 0;
+    font-size: 1.1em; /* 设置字体大小 */
+    margin: 0; /* 清除默认外边距 */
+    flex: 1; /* 允许标题扩展以填充可用空间 */
+    text-align: center; /* 设置文本居中 */
 }
 
 /* 聊天消息区域样式 */
 .chat-messages {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    min-height: 0;
+    flex: 1; /* 允许消息区域扩展以填充可用空间 */
+    padding: 20px; /* 设置内边距 */
+    overflow-y: auto; /* 允许垂直滚动 */
+    display: flex; /* 使用 Flexbox 布局 */
+    flex-direction: column; /* 垂直排列子元素 */
+    gap: 15px; /* 设置子元素之间的间距 */
+    min-height: 0; /* 设置最小高度 */
 }
 
 /* 消息气泡基础样式 */
 .message {
-    padding: 8px 12px;
-    margin-bottom: 0;
-    border-radius: 10px;
-    max-width: 75%;
-    clear: both;
+    padding: 8px 12px; /* 设置内边距 */
+    margin-bottom: 0; /* 清除默认下外边距 */
+    border-radius: 10px; /* 设置边框圆角 */
+    max-width: 75%; /* 设置最大宽度 */
+    clear: both; /* 清除浮动 */
 }
 
 /* 用户消息气泡样式 */
 .user-message {
-    background-color: #007bff;
-    color: white;
-    margin-left: auto;
-    margin-bottom: 8px;
+    background-color: #007bff; /* 设置背景颜色 */
+    color: white; /* 设置文字颜色 */
+    margin-left: auto; /* 设置左外边距为自动，使其靠右 */
+    margin-bottom: 8px; /* 设置下外边距 */
 }
 
 /* AI消息气泡样式 */
 .ai-message {
-    background-color: #2d2d2d;
-    color: #ffffff;
-    padding: 12px 16px;
-    border-radius: 10px;
-    font-size: 13px;
-    line-height: 1.5;
-    min-height: 18px;
-    width: auto;
-    height: auto;
-    overflow: hidden;
+    background-color: #2d2d2d; /* 设置背景颜色 */
+    color: #ffffff; /* 设置文字颜色 */
+    padding: 12px 16px; /* 设置内边距 */
+    border-radius: 10px; /* 设置边框圆角 */
+    font-size: 13px; /* 设置字体大小 */
+    line-height: 1.5; /* 设置行高 */
+    min-height: 18px; /* 设置最小高度 */
+    width: auto; /* 设置宽度为自动 */
+    height: auto; /* 设置高度为自动 */
+    overflow: hidden; /* 隐藏溢出内容 */
 }
 
 /* AI消息内容样式 */
 .ai-content, .typing {
-    font-size: 13px;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    color: #ffffff;
-    margin: 0;
-    padding: 0;
+    font-size: 13px; /* 设置字体大小 */
+    line-height: 1.5; /* 设置行高 */
+    white-space: pre-wrap; /* 允许文本换行 */
+    color: #ffffff; /* 设置文字颜色 */
+    margin: 0; /* 清除默认外边距 */
+    padding: 0; /* 清除默认内边距 */
 }
 
 /* AI消息段落样式 */
 .ai-message p {
-    margin: 0 0 16px 0;
+    margin: 0 0 16px 0; /* 设置段落外边距 */
 }
 .ai-message p:last-child {
-    margin-bottom: 0;
+    margin-bottom: 0; /* 清除最后一个段落的下外边距 */
 }
 
 /* 加载中消息样式 */
 .loading-message {
-    background-color: #2d2d2d;
-    align-self: flex-start;
-    padding: 8px;
-    border-radius: 10px;
+    background-color: #2d2d2d; /* 设置背景颜色 */
+    align-self: flex-start; /* 设置自身对齐方式为左对齐 */
+    padding: 8px; /* 设置内边距 */
+    border-radius: 10px; /* 设置边框圆角 */
 }
 
 /* 加载动画样式 */
 .loading-spinner {
-    border: 3px solid rgba(255, 255, 255, 0.2);
-    border-left-color: #ffffff;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    animation: spin 1s linear infinite;
+    border: 3px solid rgba(255, 255, 255, 0.2); /* 设置边框样式 */
+    border-left-color: #ffffff; /* 设置左边框颜色 */
+    border-radius: 50%; /* 设置边框圆角为圆形 */
+    width: 20px; /* 设置宽度 */
+    height: 20px; /* 设置高度 */
+    animation: spin 1s linear infinite; /* 设置动画 */
 }
 
 /* 加载动画关键帧 */
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% { transform: rotate(0deg); } /* 初始状态 */
+    100% { transform: rotate(360deg); } /* 结束状态 */
 }
 
 /* 输入区域样式 */
 .chat-input-area {
-    display: flex;
-    padding: 10px;
-    border-top: 1px solid #ddd;
-    min-height: fit-content;
+    display: flex; /* 使用 Flexbox 布局 */
+    padding: 10px; /* 设置内边距 */
+    border-top: 1px solid #ddd; /* 设置上边框 */
+    min-height: fit-content; /* 设置最小高度为内容高度 */
 }
 
 /* 消息输入框样式 */
 #message-input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    margin-right: 0px;
-    resize: none;
-    font-size: 14px;
-    height: 100px;
-    min-height: 100px;
+    flex: 1; /* 允许输入框扩展以填充可用空间 */
+    padding: 8px; /* 设置内边距 */
+    border: 1px solid #ddd; /* 设置边框 */
+    border-radius: 6px; /* 设置边框圆角 */
+    margin-right: 0px; /* 设置右外边距 */
+    resize: none; /* 禁止调整大小 */
+    font-size: 14px; /* 设置字体大小 */
+    height: 100px; /* 设置高度 */
+    min-height: 100px; /* 设置最小高度 */
 }
 
 /* 发送按钮样式 */
 #send-button {
-    position: relative;
-    z-index: 1;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    font-size: 14px;
-    margin-left: 12px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative; /* 设置定位为相对定位 */
+    z-index: 1; /* 设置 z-index */
+    background-color: #007bff; /* 设置背景颜色 */
+    color: white; /* 设置文字颜色 */
+    border: none; /* 清除边框 */
+    border-radius: 6px; /* 设置边框圆角 */
+    padding: 8px 12px; /* 设置内边距 */
+    cursor: pointer; /* 设置鼠标样式为指针 */
+    transition: background-color 0.2s ease; /* 设置过渡效果 */
+    font-size: 14px; /* 设置字体大小 */
+    margin-left: 12px; /* 设置左外边距 */
+    height: 100%; /* 设置高度为 100% */
+    display: flex; /* 使用 Flexbox 布局 */
+    align-items: center; /* 垂直居中对齐 */
+    justify-content: center; /* 水平居中对齐 */
 }
 
 /* 发送按钮悬停效果 */
 #send-button:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* 设置悬停时的背景颜色 */
 }
 
 /* 发送按钮点击效果 */
 #send-button:active {
-    background-color: #004085;
+    background-color: #004085; /* 设置点击时的背景颜色 */
 }
 
 /* 消息文本样式 */
 .bot-message, .user-message {
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 14px; /* 设置字体大小 */
+    line-height: 1.5; /* 设置行高 */
 }
 
 /* 机器人消息换行处理 */
 .bot-message {
-    white-space: pre-wrap;
+    white-space: pre-wrap; /* 允许文本换行 */
 }
 
 /* 用户消息换行处理 */
 .user-message {
-    white-space: pre-wrap;
+    white-space: pre-wrap; /* 允许文本换行 */
 }
 
 /* 机器人消息强调文本样式 */
 .bot-message strong {
-    display: block;
-    margin-bottom: 0.5em;
+    display: block; /* 设置为块级元素 */
+    margin-bottom: 0.5em; /* 设置下外边距 */
 }
 
 /* AI消息代码块容器样式 */
 .ai-message pre {
-    background-color: #1e1e1e !important;
-    border-radius: 6px;
-    padding: 16px;
-    overflow: auto;
-    position: relative;
-    margin: 1em 0;
-    border: 1px solid #404040;
+    background-color: #1e1e1e !important; /* 设置背景颜色 */
+    border-radius: 6px; /* 设置边框圆角 */
+    padding: 16px; /* 设置内边距 */
+    overflow: auto; /* 允许滚动 */
+    position: relative; /* 设置定位为相对定位 */
+    margin: 1em 0; /* 设置外边距 */
+    border: 1px solid #404040; /* 设置边框 */
 }
 
 /* AI消息代码文本样式 */
 .ai-message code {
-    font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 14px;
-    color: #d4d4d4;
+    font-family: 'Consolas', 'Courier New', monospace; /* 设置字体 */
+    font-size: 14px; /* 设置字体大小 */
+    color: #d4d4d4; /* 设置文字颜色 */
 }
 
 /* AI消息列表样式 */
 .ai-message ul, .ai-message ol {
-    margin: 0 0 16px 0;
-    padding-left: 20px;
+    margin: 0 0 16px 0; /* 设置外边距 */
+    padding-left: 20px; /* 设置左内边距 */
 }
 
 /* 代码复制按钮样式 */
 .copy-button {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    padding: 4px 8px;
-    background-color: #3c3c3c;
-    color: #cccccc;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    opacity: 0.8;
-    transition: all 0.2s ease;
+    position: absolute; /* 设置定位为绝对定位 */
+    top: 8px; /* 设置上边距 */
+    right: 8px; /* 设置右边距 */
+    padding: 4px 8px; /* 设置内边距 */
+    background-color: #3c3c3c; /* 设置背景颜色 */
+    color: #cccccc; /* 设置文字颜色 */
+    border: none; /* 清除边框 */
+    border-radius: 4px; /* 设置边框圆角 */
+    cursor: pointer; /* 设置鼠标样式为指针 */
+    opacity: 0.8; /* 设置透明度 */
+    transition: all 0.2s ease; /* 设置过渡效果 */
 }
 
 /* 代码复制按钮悬停效果 */
 .copy-button:hover {
-    opacity: 1;
-    background-color: #505050;
+    opacity: 1; /* 设置悬停时的透明度 */
+    background-color: #505050; /* 设置悬停时的背景颜色 */
 }
 
 /* 代码复制成功状态样式 */
 .copy-button.copied {
-    background-color: #4ec9b0;
-    color: #1e1e1e;
+    background-color: #4ec9b0; /* 设置复制成功时的背景颜色 */
+    color: #1e1e1e; /* 设置复制成功时的文字颜色 */
 }
 
 /* 代码高亮样式 - 关键字 */
 .hljs-keyword {
-    color: #569cd6;
+    color: #569cd6; /* 设置关键字颜色 */
 }
 
 /* 代码高亮样式 - 函数 */
 .hljs-function {
-    color: #dcdcaa;
+    color: #dcdcaa; /* 设置函数颜色 */
 }
 
 /* 代码高亮样式 - 字符串 */
 .hljs-string {
-    color: #ce9178;
+    color: #ce9178; /* 设置字符串颜色 */
 }
 
 /* 代码高亮样式 - 数字 */
 .hljs-number {
-    color: #b5cea8;
+    color: #b5cea8; /* 设置数字颜色 */
 }
 
 /* 代码高亮样式 - 注释 */
 .hljs-comment {
-    color: #6a9955;
-    font-style: italic;
+    color: #6a9955; /* 设置注释颜色 */
+    font-style: italic; /* 设置字体样式为斜体 */
 }
 
 /* 代码高亮样式 - 变量 */
 .hljs-variable {
-    color: #9cdcfe;
+    color: #9cdcfe; /* 设置变量颜色 */
 }
 
 /* 代码高亮样式 - 函数名 */
 .hljs-title {
-    color: #dcdcaa;
+    color: #dcdcaa; /* 设置函数名颜色 */
 }
 
 /* 代码高亮样式 - 参数 */
 .hljs-params {
-    color: #9cdcfe;
+    color: #9cdcfe; /* 设置参数颜色 */
 }
 
 /* 代码高亮样式 - 内置函数 */
 .hljs-built_in {
-    color: #4ec9b0;
+    color: #4ec9b0; /* 设置内置函数颜色 */
 }
 
 /* 代码高亮样式 - 字面量 */
 .hljs-literal {
-    color: #569cd6;
+    color: #569cd6; /* 设置字面量颜色 */
 }
 
 /* 代码高亮样式 - 运算符 */
 .hljs-operator {
-    color: #d4d4d4;
+    color: #d4d4d4; /* 设置运算符颜色 */
 }
 
 /* 代码高亮样式 - 类 */
 .hljs-class {
-    color: #4ec9b0;
+    color: #4ec9b0; /* 设置类颜色 */
 }
 
 /* 代码高亮样式 - 属性 */
 .hljs-property {
-    color: #9cdcfe;
+    color: #9cdcfe; /* 设置属性颜色 */
 }
 
 /* AI消息行内代码样式 */
 .ai-message p code {
-    background-color: #1e1e1e;
-    padding: 2px 4px;
-    border-radius: 3px;
-    color: #d4d4d4;
-    border: 1px solid #404040;
+    background-color: #1e1e1e; /* 设置背景颜色 */
+    padding: 2px 4px; /* 设置内边距 */
+    border-radius: 3px; /* 设置边框圆角 */
+    color: #d4d4d4; /* 设置文字颜色 */
+    border: 1px solid #404040; /* 设置边框 */
 }
 
 /* 代码选中效果 */
 .ai-message pre code::selection {
-    background-color: #264f78;
+    background-color: #264f78; /* 设置选中时的背景颜色 */
 }
 
 /* 代码块滚动条样式 */
 .ai-message pre::-webkit-scrollbar {
-    width: 14px;
-    height: 14px;
+    width: 14px; /* 设置滚动条宽度 */
+    height: 14px; /* 设置滚动条高度 */
 }
 
 /* 代码块滚动条滑块样式 */
 .ai-message pre::-webkit-scrollbar-thumb {
-    background-color: #424242;
-    border-radius: 7px;
-    border: 3px solid #1e1e1e;
+    background-color: #424242; /* 设置滑块背景颜色 */
+    border-radius: 7px; /* 设置滑块边框圆角 */
+    border: 3px solid #1e1e1e; /* 设置滑块边框 */
 }
 
 /* 代码块滚动条轨道样式 */
 .ai-message pre::-webkit-scrollbar-track {
-    background-color: #1e1e1e;
+    background-color: #1e1e1e; /* 设置轨道背景颜色 */
 }
 
 /* AI消息容器样式 */
 .ai-message-container {
-    display: flex;
-    flex-direction: column;
-    max-width: 75%;
-    margin-right: auto;
-    margin-bottom: 8px;
+    display: flex; /* 使用 Flexbox 布局 */
+    flex-direction: column; /* 垂直排列子元素 */
+    max-width: 75%; /* 设置最大宽度 */
+    margin-right: auto; /* 设置右外边距为自动，使其靠左 */
+    margin-bottom: 8px; /* 设置下外边距 */
 }
 
 /* 停止按钮样式 */
 .stop-button {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 8px 12px;
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    font-size: 14px;
-    min-width: 40px;
-    margin-bottom: 0px;
-    z-index: 10;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: absolute; /* 设置定位为绝对定位 */
+    top: 0; /* 设置上边距 */
+    right: 0; /* 设置右边距 */
+    padding: 8px 12px; /* 设置内边距 */
+    background-color: #dc3545; /* 设置背景颜色 */
+    color: white; /* 设置文字颜色 */
+    border: none; /* 清除边框 */
+    border-radius: 6px; /* 设置边框圆角 */
+    cursor: pointer; /* 设置鼠标样式为指针 */
+    transition: background-color 0.2s ease; /* 设置过渡效果 */
+    font-size: 14px; /* 设置字体大小 */
+    min-width: 40px; /* 设置最小宽度 */
+    margin-bottom: 0px; /* 设置下外边距 */
+    z-index: 10; /* 设置 z-index */
+    height: 100%; /* 设置高度为 100% */
+    display: flex; /* 使用 Flexbox 布局 */
+    align-items: center; /* 垂直居中对齐 */
+    justify-content: center; /* 水平居中对齐 */
 }
 
 /* 停止按钮悬停效果 */
 .stop-button:hover {
-    background-color: #c82333;
+    background-color: #c82333; /* 设置悬停时的背景颜色 */
 }
 
 /* 停止按钮点击效果 */
 .stop-button:active {
-    background-color: #ac1929;
+    background-color: #ac1929; /* 设置点击时的背景颜色 */
 }
 
 /* 输入区域的 div 样式 */
 .chat-input-area > div {
-    display: flex;
-    flex: 1; /* 让 div 占据剩余空间 */
-    align-items: center; /* 垂直居中 */
+    display: flex; /* 使用 Flexbox 布局 */
+    flex: 1; /* 允许 div 扩展以填充可用空间 */
+    align-items: center; /* 垂直居中对齐 */
 }
 
 /* 主题切换按钮容器样式 */
 .theme-toggle-container {
-    display: flex;
-    align-items: center;
+    display: flex; /* 使用 Flexbox 布局 */
+    align-items: center; /* 垂直居中对齐 */
 }
 
 /* 主题切换按钮样式 */
 .theme-toggle-button {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: none;
-    background-color: #fff;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    position: relative;
+    width: 24px; /* 设置宽度 */
+    height: 24px; /* 设置高度 */
+    border-radius: 50%; /* 设置边框圆角为圆形 */
+    border: none; /* 清除边框 */
+    background-color: #fff; /* 设置背景颜色 */
+    cursor: pointer; /* 设置鼠标样式为指针 */
+    transition: background-color 0.3s ease; /* 设置过渡效果 */
+    position: relative; /* 设置定位为相对定位 */
 }
 
 /* 主题切换按钮 - 深色模式 */
 .theme-toggle-button.dark-mode {
-    background-color: #333;
+    background-color: #333; /* 设置深色模式下的背景颜色 */
 }
 
-/* 主题切换按钮悬停提示 */
+/* 主题切换按钮 - 深色模式下的月亮图标 */
 .theme-toggle-button::before {
-    content: '切换到深色模式';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translate(-50%, 5px);
-    width: auto;
-    height: auto;
-    padding: 4px 8px;
-    border-radius: 4px;
-    background-color: #333;
-    color: #fff;
-    font-size: 12px;
-    white-space: nowrap;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    z-index: 10;
-    opacity: 0; /* 初始隐藏 */
-    transition: opacity 0.2s ease; /* 添加过渡效果 */
+    content: ''; /* 设置内容为空 */
+    position: absolute; /* 设置定位为绝对定位 */
+    top: 50%; /* 设置上边距为 50% */
+    left: 50%; /* 设置左边距为 50% */
+    transform: translate(-50%, -50%); /* 使用 transform 居中 */
+    width: 12px; /* 设置宽度 */
+    height: 12px; /* 设置高度 */
+    border-radius: 50%; /* 设置边框圆角为圆形 */
+    background-color: #000; /* 设置背景颜色 */
+    transition: background-color 0.3s ease; /* 设置过渡效果 */
 }
 
-.theme-toggle-button:hover::before {
-    opacity: 1; /* 悬停时显示 */
-}
-
-.theme-toggle-button.dark-mode:hover::before {
-    content: '切换到浅色模式';
-    background-color: #fff;
-    color: #333;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    opacity: 1; /* 悬停时显示 */
+/* 主题切换按钮 - 浅色模式下的太阳图标 */
+.theme-toggle-button.dark-mode::before {
+    background-color: #fff; /* 设置浅色模式下的背景颜色 */
+    box-shadow: 0 0 0 2px #fff; /* 设置阴影效果 */
 }
 
 /* 深色模式下的 body 样式 */
 body.dark-mode {
-    background-color: #1e1e1e;
-    color: #fff;
+    background-color: #1e1e1e; /* 设置深色模式下的背景颜色 */
+    color: #fff; /* 设置深色模式下的文字颜色 */
 }
 
 /* 深色模式下的聊天容器样式 */
 .chat-container.dark-mode {
-    background-color: #2d2d2d;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+    background-color: #2d2d2d; /* 设置深色模式下的背景颜色 */
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15); /* 设置深色模式下的阴影效果 */
 }
 
 /* 深色模式下的聊天头部样式 */
 .chat-header.dark-mode {
-    background-color: #333;
-    color: #fff;
+    background-color: #333; /* 设置深色模式下的背景颜色 */
+    color: #fff; /* 设置深色模式下的文字颜色 */
 }
 
 /* 深色模式下的消息气泡样式 */
 .user-message.dark-mode {
-    background-color: #007bff !important;
-    color: #fff !important;
+    background-color: #007bff !important; /* 设置深色模式下的背景颜色 */
+    color: #fff !important; /* 设置深色模式下的文字颜色 */
 }
 
 /* 深色模式下的 AI 消息气泡样式 */
 .ai-message.dark-mode, .chat-messages.dark-mode .ai-message {
-    background-color: #444 !important;
-    color: #fff !important;
+    background-color: #444 !important; /* 设置深色模式下的背景颜色 */
+    color: #fff !important; /* 设置深色模式下的文字颜色 */
 }
 
 /* 深色模式下的加载中消息样式 */
 .loading-message.dark-mode {
-    background-color: #444;
+    background-color: #444; /* 设置深色模式下的背景颜色 */
 }
 
 /* 深色模式下的输入框样式 */
 .chat-input-area.dark-mode #message-input {
-    background-color: #444 !important;
-    color: #fff !important;
-    border-color: #666 !important;
+    background-color: #444 !important; /* 设置深色模式下的背景颜色 */
+    color: #fff !important; /* 设置深色模式下的文字颜色 */
+    border-color: #666 !important; /* 设置深色模式下的边框颜色 */
+}
+
+/* Scroll to bottom button style */
+.scroll-to-bottom-button {
+    position: absolute; /* 设置定位为绝对定位 */
+    background-color: rgba(0, 123, 255, 0.7); /* 设置背景颜色 */
+    color: white; /* 设置文字颜色 */
+    border: none; /* 清除边框 */
+    border-radius: 50%; /* 设置边框圆角为圆形 */
+    width: 36px; /* 设置宽度 */
+    height: 36px; /* 设置高度 */
+    cursor: pointer; /* 设置鼠标样式为指针 */
+    display: flex; /* 使用 Flexbox 布局 */
+    align-items: center; /* 垂直居中对齐 */
+    justify-content: center; /* 水平居中对齐 */
+    opacity: 0.8; /* 设置透明度 */
+    transition: opacity 0.3s ease, transform 0.2s ease; /* 设置过渡效果 */
+    z-index: 10; /* 设置 z-index */
+}
+
+.scroll-to-bottom-button:hover {
+    opacity: 1; /* 设置悬停时的透明度 */
+    transform: translateY(-2px); /* 设置悬停时的位移 */
+}
+
+.scroll-to-bottom-button:active {
+    transform: translateY(0); /* 设置点击时的位移 */
+}
+
+.scroll-to-bottom-button svg {
+    width: 20px; /* 设置 SVG 宽度 */
+    height: 20px; /* 设置 SVG 高度 */
+}
+
+/* 附件按钮样式 */
+#attach-button {
+    position: relative; /* 设置定位为相对定位 */
+    z-index: 1; /* 设置 z-index */
+    background-color: rgb(0, 123, 255); /* 设置背景颜色 */
+    color: white; /* 设置文字颜色 */
+    border: none; /* 清除边框 */
+    border-radius: 6px; /* 设置边框圆角 */
+    padding: 6px 10px; /* 设置内边距 */
+    cursor: pointer; /* 设置鼠标样式为指针 */
+    transition: background-color 0.2s ease, transform 0.1s ease; /* 设置过渡效果 */
+    font-size: 12px; /* 设置字体大小 */
+    margin-left: 12px; /* 设置左外边距 */
+    height: auto; /* 设置高度为自动 */
+    display: flex; /* 使用 Flexbox 布局 */
+    align-items: center; /* 垂直居中对齐 */
+    justify-content: center; /* 水平居中对齐 */
+    margin-right: 10px; /* 设置右外边距 */
+    top: 0px; /* 上移 */
+}
+
+/* 附件按钮悬停效果 */
+#attach-button:hover {
+    background-color: #0056b3; /* 设置悬停时的背景颜色 */
+    transform: translateY(-1px); /* 设置悬停时的位移 */
+}
+
+/* 附件按钮点击效果 */
+#attach-button:active {
+    background-color: #004085; /* 设置点击时的背景颜色 */
+    transform: translateY(0); /* 设置点击时的位移 */
+}
+
+/* 用户消息图片预览样式 */
+.user-message img {
+    max-width: 100%; /* 设置最大宽度为 100% */
+    max-height: 200px; /* 设置最大高度为 200px */
+    border-radius: 6px; /* 设置边框圆角 */
+    margin-top: 5px; /* 设置上外边距 */
 }

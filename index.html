@@ -20,11 +20,10 @@
 
     <nav>
         <ul class="nav-left">
-            <li><a href="#" class="navigation-link">option1</a></li>
-            <li><a href="#" class="navigation-link">option2</a></li>
+            <li><a href="#" class="navigation-link">option</a></li>
         </ul>
         <ul class="nav-right">
-            <li><span class="version">v0.0.3</span></li>
+            <li><span class="version">v0.0.4</span></li>
             <li class="theme-toggle-container">
                 <button id="theme-toggle" class="theme-toggle-button"></button>
             </li>
@@ -35,19 +34,27 @@
     <div class="chat-container">
         <div class="chat-header">
             <h1>AI CHAT_BOX</h1>
+            <input type="file" id="file-input" style="display: none;" accept="image/*">
+            <button id="attach-button">附件</button>
         </div>
         <div class="chat-messages" id="chat-messages">
             <!-- 聊天消息将在这里动态添加 -->
+            <button id="scroll-to-bottom-button" class="scroll-to-bottom-button" style="display: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+            </button>
         </div>
         <div class="chat-input-area">
             <div style="position: relative;">
                 <textarea id="message-input" placeholder="ctrl + enter发送..."></textarea>
+                <input type="file" id="file-input" style="display: none;">
                 <button id="send-button">发送</button>
             </div>
         </div>
     </div>
     <script src="js/api.js"></script>
     <script src="js/app.js"></script>
-
 </body>
 </html>

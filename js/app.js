@@ -6,6 +6,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const body = document.body;
     const chatContainer = document.querySelector('.chat-container');
     const chatHeader = document.querySelector('.chat-header');
+    const scrollToBottomButton = document.getElementById('scroll-to-bottom-button');
+    const fileInput = document.getElementById('file-input');
+    const attachButton = document.getElementById('attach-button');
+
+    let selectedFile = null;
+
+    attachButton.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (event) => {
+        selectedFile = event.target.files[0];
+        if (selectedFile) {
+            if (!selectedFile.type.startsWith('image/')) {
+                selectedFile = null;
+                attachButton.textContent = '附件';
+                alert('请选择图片文件');
+                fileInput.value = ''; // 清空文件输入
+                return;
+            }
+            attachButton.textContent = selectedFile.name;
+        } else {
+            attachButton.textContent = '附件';
+        }
+    });
 
     sendButton.addEventListener('click', sendMessage);
 
@@ -16,15 +41,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    let sendingMessage = false;
+    let isSending = false;
+    async function setSendingState(state) {
+        isSending = state;
+        sendButton.disabled = state;
+        return Promise.resolve();
+    }
 
     async function sendMessage() {
-        if (sendingMessage) return;
-        sendingMessage = true;
+        if (isSending || sendButton.disabled) return;
+        await setSendingState(true);
+        let stop = false;
         
         const message = messageInput.value.trim();
-        if (message) {
-            addMessage(message, 'user');
+        if (message || selectedFile) {
+            let fileData = null;
+            if (selectedFile) {
+                fileData = await readFileAsBase64(selectedFile, (progress) => {
+                    uploadProgressBar.style.width = `${progress}%`;
+                });
+            }
+            addMessage(message, 'user', fileData);
             messageInput.value = '';
             sendButton.disabled = true;
 
@@ -58,12 +95,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const sendButtonContainer = document.querySelector('.chat-input-area > div');
             sendButtonContainer.appendChild(stopButton);
 
-            let stop = false; // 用于控制 AI 输出的暂停和恢复
-            stopButton.addEventListener('click', () => {
+            stopButton.addEventListener('click', async () => {
                 stop = true;
                 stopButton.style.display = 'none';
-                sendButton.disabled = false;
-                sendingMessage = false; // 重置 sendingMessage
+                await setSendingState(false);
             });
 
             try {
@@ -105,15 +140,33 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                         }
                     });
-                }).finally(() => {
-                    stopButton.style.display = 'none';
+                }, fileData).finally(async () => {
+                    if (!stop) {
+                        setTimeout(async () => {
+                            stopButton.style.display = 'none';
+                            selectedFile = null;
+                            attachButton.textContent = '附件';
+                            await setSendingState(false);
+                            // 移除最后一个字符
+                            if (contentDiv.childNodes.length > 0) {
+                                const lastChild = contentDiv.childNodes[contentDiv.childNodes.length - 1];
+                                if (lastChild.nodeType === Node.TEXT_NODE) {
+                                    lastChild.textContent = lastChild.textContent.slice(0, -1);
+                                } else if (lastChild.nodeType === Node.ELEMENT_NODE && lastChild.lastChild && lastChild.lastChild.nodeType === Node.TEXT_NODE) {
+                                    lastChild.lastChild.textContent = lastChild.lastChild.textContent.slice(0, -1);
+                                }
+                            }
+                        }, 500);
+                    } else {
+                        stopButton.style.display = 'none';
+                        selectedFile = null;
+                        attachButton.textContent = '附件';
+                    }
                 });
             } catch (error) {
                 console.error("Error:", error);
                 messageDiv.innerHTML = '<div class="ai-content">抱歉，出错了，请稍后重试。</div>';
-            } finally {
-                sendingMessage = false;
-                sendButton.disabled = false;
+                await setSendingState(false);
                 // 移除最后一个字符
                 if (contentDiv.childNodes.length > 0) {
                     const lastChild = contentDiv.childNodes[contentDiv.childNodes.length - 1];
@@ -127,59 +180,42 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function addMessage(message, sender) {
+    async function readFileAsBase64(file, onProgress) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                resolve({
+                    type: file.type,
+                    data: reader.result.split(',')[1]
+                });
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function addMessage(message, sender, fileData = null) {
+        const chatMessages = document.getElementById('chat-messages');
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', `${sender}-message`);
-        
         let processedMessage = message;
-        if (sender === 'ai') {
-            marked.setOptions({
-                highlight: function(code, language) {
-                    if (language && hljs.getLanguage(language)) {
-                        try {
-                            return hljs.highlight(code, { language: language }).value;
-                        } catch (err) {
-                            console.error('Highlight.js error:', err);
-                        }
-                    }
-                    return hljs.highlightAuto(code).value;
-                },
-                langPrefix: 'hljs language-',
-                breaks: true,
-                gfm: true
-            });
-            
-            processedMessage = marked.parse(message);
-            
-            setTimeout(() => {
-                const codeBlocks = messageDiv.querySelectorAll('pre code');
-                codeBlocks.forEach(block => {
-                    const pre = block.parentElement;
-                    const copyButton = document.createElement('button');
-                    copyButton.className = 'copy-button';
-                    copyButton.textContent = '复制';
-                    copyButton.onclick = async () => {
-                        await navigator.clipboard.writeText(block.textContent);
-                        copyButton.textContent = '已复制!';
-                        copyButton.classList.add('copied');
-                        setTimeout(() => {
-                            copyButton.textContent = '复制';
-                            copyButton.classList.remove('copied');
-                        }, 2000);
-                    };
-                    pre.appendChild(copyButton);
-                });
-            }, 0);
-        } else {
-            processedMessage = message.replace(/\*/g, '<br>');
+        if (fileData && fileData.type.startsWith('image/')) {
+            processedMessage = `<img src="data:${fileData.type};base64,${fileData.data}" alt="Uploaded Image" style="max-width: 100%; max-height: 200px; border-radius: 6px; margin-top: 5px;">`;
         }
-        
         messageDiv.innerHTML = `<span style="font-size: 14px;">${processedMessage}</span>`;
         chatMessages.appendChild(messageDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        scrollToBottom();
         
         if (sender === 'ai') {
             hljs.highlightAll();
+        }
+        
+        // Show the scroll-to-bottom button if not already at the bottom
+        if (chatMessages.scrollHeight > chatMessages.clientHeight + chatMessages.scrollTop) {
+            scrollToBottomButton.style.display = 'flex';
+            updateScrollButtonPosition(); // Update the button position
+        } else {
+            scrollToBottomButton.style.display = 'none';
         }
     }
 
@@ -211,5 +247,36 @@ document.addEventListener('DOMContentLoaded', function() {
         themeToggle.classList.toggle('dark-mode');
         const chatInputArea = document.querySelector('.chat-input-area');
         chatInputArea.classList.toggle('dark-mode');
+    });
+
+    // Function to update the scroll button position
+    function updateScrollButtonPosition() {
+        const sendButtonRect = sendButton.getBoundingClientRect();
+        const chatMessagesRect = chatMessages.getBoundingClientRect();
+
+        const buttonTop = sendButtonRect.top - chatMessagesRect.top - scrollToBottomButton.offsetHeight + 75; // 10px margin
+        const buttonRight = chatMessagesRect.right - sendButtonRect.right + 21; // 10px margin and move 40px left
+
+        scrollToBottomButton.style.top = `${buttonTop}px`;
+        scrollToBottomButton.style.right = `${buttonRight}px`;
+    }
+
+    // Function to scroll to the bottom
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        scrollToBottomButton.style.display = 'none';
+    }
+
+    // Event listener for the scroll to bottom button
+    scrollToBottomButton.addEventListener('click', scrollToBottom);
+
+    // Event listener for scroll to show/hide the button
+    chatMessages.addEventListener('scroll', () => {
+        if (chatMessages.scrollHeight > chatMessages.clientHeight + chatMessages.scrollTop) {
+            scrollToBottomButton.style.display = 'flex';
+            updateScrollButtonPosition(); // Update the button position
+        } else {
+            scrollToBottomButton.style.display = 'none';
+        }
     });
 });
