@@ -86,3 +86,23 @@ nav a:active {
         justify-content: center; /* 小屏幕时居中对齐 */
     }
 } 
+
+/* 设置按钮样式 */
+#settings-button {
+    color: white; /* 白色文字 */
+    text-decoration: none; /* 清除下划线 */
+    padding: 8px 16px; /* 设置内边距 */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
+    border-radius: 8px; /* 设置圆角 */
+    font-size: 14px; /* 设置字体大小 */
+}
+
+#settings-button:hover {
+    background-color: #0056b3; /* 悬停时背景颜色 */
+    transform: translateY(-2px); /* 悬停时向上移动 */
+}
+
+#settings-button:active {
+    background-color: #004085; /* 点击时背景颜色 */
+    transform: translateY(0); /* 点击时取消移动 */
+} 

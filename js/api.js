@@ -1,6 +1,6 @@
-const apiKey = 'API 密钥'; // 你的 API 密钥
-const apiDomain = 'API 域名'; // 自定义 API 域名
-const modelName = '模型名称'; // 模型名称
+let apiKey = 'api Key'; // 你的 API 密钥
+let apiDomain = 'api url'; // 自定义 API 域名
+let modelName = 'model Name'; // 模型名称
 
 // 修改为流式响应
 async function fetchAIResponse(message, onChunk, fileData = null) {
@@ -21,13 +21,19 @@ async function fetchAIResponse(message, onChunk, fileData = null) {
     };
 
     try {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        };
+        console.log("Request Headers:", headers);
+
+        const body = JSON.stringify(data);
+        console.log("Request Body:", body);
+
         const response = await fetch(url, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify(data)
+            headers: headers,
+            body: body
         });
 
         if (!response.ok) {
@@ -42,7 +48,7 @@ async function fetchAIResponse(message, onChunk, fileData = null) {
 
         while (!stop) {
             const { done, value } = await reader.read();
-            if (done || stop) break; // 如果 done 或 stop 为 true，则结束循环
+            if (done) break;
 
             const chunk = decoder.decode(value);
             const lines = chunk.split('\n');
@@ -65,4 +71,10 @@ async function fetchAIResponse(message, onChunk, fileData = null) {
         console.error("Error fetching AI response:", error);
         throw error;
     }
+}
+
+function setApiConfig(newApiKey, newApiDomain, newModelName) {
+    apiKey = newApiKey;
+    apiDomain = newApiDomain;
+    modelName = newModelName;
 }

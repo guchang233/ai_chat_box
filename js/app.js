@@ -9,24 +9,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const scrollToBottomButton = document.getElementById('scroll-to-bottom-button');
     const fileInput = document.getElementById('file-input');
     const attachButton = document.getElementById('attach-button');
+    const settingsButton = document.getElementById('settings-button');
+    const settingsModal = document.getElementById('settings-modal');
+    const closeButton = document.querySelector('.close-button');
+    const saveSettingsButton = document.getElementById('save-settings-button');
+    const apiKeyInput = document.getElementById('api-key-input');
+    const apiUrlInput = document.getElementById('api-url-input');
+    const modelNameInput = document.getElementById('model-name-input');
+    const openNewPageButton = document.getElementById('open-github');
 
     let selectedFile = null;
+    let settingsChanged = false;
 
     attachButton.addEventListener('click', () => {
         fileInput.click();
     });
 
-    fileInput.addEventListener('change', (event) => {
+    fileInput.addEventListener('change', async (event) => {
         selectedFile = event.target.files[0];
         if (selectedFile) {
             if (!selectedFile.type.startsWith('image/')) {
                 selectedFile = null;
                 attachButton.textContent = '附件';
                 alert('请选择图片文件');
-                fileInput.value = ''; // 清空文件输入
+                fileInput.value = '';
                 return;
             }
             attachButton.textContent = selectedFile.name;
+            const fileData = await readFileAsBase64(selectedFile);
+            addMessage('', 'user', fileData);
+            fileInput.value = '';
         } else {
             attachButton.textContent = '附件';
         }
@@ -41,140 +53,109 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    let isSending = false;
-    async function setSendingState(state) {
-        isSending = state;
-        sendButton.disabled = state;
-        return Promise.resolve();
-    }
+    let sendingMessage = false;
 
     async function sendMessage() {
-        if (isSending || sendButton.disabled) return;
-        await setSendingState(true);
-        let stop = false;
+        if (sendingMessage) return;
+        sendingMessage = true;
         
         const message = messageInput.value.trim();
-        if (message || selectedFile) {
-            let fileData = null;
-            if (selectedFile) {
-                fileData = await readFileAsBase64(selectedFile, (progress) => {
-                    uploadProgressBar.style.width = `${progress}%`;
-                });
-            }
-            addMessage(message, 'user', fileData);
-            messageInput.value = '';
-            sendButton.disabled = true;
-
-            // 创建消息容器
-            const messageContainer = document.createElement('div');
-            messageContainer.className = 'ai-message-container';
-
-            // 创建加载动画
-            const loadingDiv = document.createElement('div');
-            loadingDiv.className = 'loading-message';
-            loadingDiv.innerHTML = '<div class="loading-spinner"></div>';
-            messageContainer.appendChild(loadingDiv);
-            chatMessages.appendChild(messageContainer);
-
-            // 创建消息气泡
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'ai-message';
-            if (body.classList.contains('dark-mode')) {
-                messageDiv.classList.add('dark-mode');
-            }
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'typing';
-            messageDiv.appendChild(contentDiv);
-
-            // 创建停止按钮
-            const stopButton = document.createElement('button');
-            stopButton.className = 'stop-button';
-            stopButton.textContent = '停止';
-            stopButton.style.display = 'none'; // 初始隐藏
-            // 将停止按钮添加到发送按钮的容器中
-            const sendButtonContainer = document.querySelector('.chat-input-area > div');
-            sendButtonContainer.appendChild(stopButton);
-
-            stopButton.addEventListener('click', async () => {
-                stop = true;
-                stopButton.style.display = 'none';
-                await setSendingState(false);
+        let fileData = null;
+        if (selectedFile) {
+            const fileDataObj = await readFileAsBase64(selectedFile, (progress) => {
+                uploadProgressBar.style.width = `${progress}%`;
             });
+            fileData = fileDataObj.data;
+            console.log("fileData:", fileData);
+        }
+        messageInput.value = '';
+        sendButton.disabled = true;
 
-            try {
-                let currentText = '';
+        const messageContainer = document.createElement('div');
+        messageContainer.className = 'ai-message-container';
+
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'loading-message';
+        loadingDiv.innerHTML = '<div class="loading-spinner"></div>';
+        messageContainer.appendChild(loadingDiv);
+        chatMessages.appendChild(messageContainer);
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'ai-message';
+        if (body.classList.contains('dark-mode')) {
+            messageDiv.classList.add('dark-mode');
+        }
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'typing';
+        messageDiv.appendChild(contentDiv);
+
+        const stopButton = document.createElement('button');
+        stopButton.className = 'stop-button';
+        stopButton.textContent = '停止';
+        stopButton.style.display = 'none';
+        const sendButtonContainer = document.querySelector('.chat-input-area > div');
+        sendButtonContainer.appendChild(stopButton);
+
+        let stop = false;
+        stopButton.addEventListener('click', () => {
+            stop = true;
+            stopButton.style.display = 'none';
+            sendButton.disabled = false;
+            sendingMessage = false;
+        });
+
+        try {
+            let currentText = '';
+            
+            messageContainer.removeChild(loadingDiv);
+            messageContainer.appendChild(messageDiv);
+            stopButton.style.display = 'block';
+
+            await fetchAIResponse(message, (chunk) => {
+                if (stop) return;
+                currentText += chunk;
+                contentDiv.innerHTML = marked.parse(currentText);
                 
-                // 开始接收响应时移除加载动画
-                messageContainer.removeChild(loadingDiv);
-                messageContainer.appendChild(messageDiv);
-                stopButton.style.display = 'block'; // 显示停止按钮
-
-                await fetchAIResponse(message, (chunk) => {
-                    if (stop) return; // 如果 stop 为 true，则暂停输出
-                    currentText += chunk;
-                    // 使用 innerHTML 而不是 textContent 以支持 markdown
-                    contentDiv.innerHTML = marked.parse(currentText);
-                    
-                    // 处理代码高亮
-                    const codeBlocks = messageDiv.querySelectorAll('pre code');
-                    codeBlocks.forEach(block => {
-                        if (!block.classList.contains('hljs')) {
-                            hljs.highlightElement(block);
-                            
-                            // 添加复制按钮
-                            const pre = block.parentElement;
-                            if (!pre.querySelector('.copy-button')) {
-                                const copyButton = document.createElement('button');
-                                copyButton.className = 'copy-button';
-                                copyButton.textContent = '复制';
-                                copyButton.onclick = async () => {
-                                    await navigator.clipboard.writeText(block.textContent);
-                                    copyButton.textContent = '已复制!';
-                                    copyButton.classList.add('copied');
-                                    setTimeout(() => {
-                                        copyButton.textContent = '复制';
-                                        copyButton.classList.remove('copied');
-                                    }, 2000);
-                                };
-                                pre.appendChild(copyButton);
-                            }
+                const codeBlocks = messageDiv.querySelectorAll('pre code');
+                codeBlocks.forEach(block => {
+                    if (!block.classList.contains('hljs')) {
+                        hljs.highlightElement(block);
+                        
+                        const pre = block.parentElement;
+                        if (!pre.querySelector('.copy-button')) {
+                            const copyButton = document.createElement('button');
+                            copyButton.className = 'copy-button';
+                            copyButton.textContent = '复制';
+                            copyButton.onclick = async () => {
+                                await navigator.clipboard.writeText(block.textContent);
+                                copyButton.textContent = '已复制!';
+                                copyButton.classList.add('copied');
+                                setTimeout(() => {
+                                    copyButton.textContent = '复制';
+                                    copyButton.classList.remove('copied');
+                                }, 2000);
+                            };
+                            pre.appendChild(copyButton);
                         }
-                    });
-                }, fileData).finally(async () => {
-                    if (!stop) {
-                        setTimeout(async () => {
-                            stopButton.style.display = 'none';
-                            selectedFile = null;
-                            attachButton.textContent = '附件';
-                            await setSendingState(false);
-                            // 移除最后一个字符
-                            if (contentDiv.childNodes.length > 0) {
-                                const lastChild = contentDiv.childNodes[contentDiv.childNodes.length - 1];
-                                if (lastChild.nodeType === Node.TEXT_NODE) {
-                                    lastChild.textContent = lastChild.textContent.slice(0, -1);
-                                } else if (lastChild.nodeType === Node.ELEMENT_NODE && lastChild.lastChild && lastChild.lastChild.nodeType === Node.TEXT_NODE) {
-                                    lastChild.lastChild.textContent = lastChild.lastChild.textContent.slice(0, -1);
-                                }
-                            }
-                        }, 500);
-                    } else {
-                        stopButton.style.display = 'none';
-                        selectedFile = null;
-                        attachButton.textContent = '附件';
                     }
                 });
-            } catch (error) {
-                console.error("Error:", error);
-                messageDiv.innerHTML = '<div class="ai-content">抱歉，出错了，请稍后重试。</div>';
-                await setSendingState(false);
-                // 移除最后一个字符
-                if (contentDiv.childNodes.length > 0) {
-                    const lastChild = contentDiv.childNodes[contentDiv.childNodes.length - 1];
-                    if (lastChild.nodeType === Node.TEXT_NODE) {
-                        lastChild.textContent = lastChild.textContent.slice(0, -1);
-                    } else if (lastChild.nodeType === Node.ELEMENT_NODE && lastChild.lastChild && lastChild.lastChild.nodeType === Node.TEXT_NODE) {
-                        lastChild.lastChild.textContent = lastChild.lastChild.textContent.slice(0, -1);
-                    }
+            }, fileData).finally(() => {
+                stopButton.style.display = 'none';
+                selectedFile = null;
+                attachButton.textContent = '附件';
+            });
+        } catch (error) {
+            console.error("Error:", error);
+            messageDiv.innerHTML = '<div class="ai-content">出错了😟注意配置是否正确 , 不要频繁操作</div>';
+        } finally {
+            sendingMessage = false;
+            sendButton.disabled = false;
+            if (contentDiv.childNodes.length > 0) {
+                const lastChild = contentDiv.childNodes[contentDiv.childNodes.length - 1];
+                if (lastChild.nodeType === Node.TEXT_NODE) {
+                    lastChild.textContent = lastChild.textContent.slice(0, -1);
+                } else if (lastChild.nodeType === Node.ELEMENT_NODE && lastChild.lastChild && lastChild.lastChild.nodeType === Node.TEXT_NODE) {
+                    lastChild.lastChild.textContent = lastChild.lastChild.textContent.slice(0, -1);
                 }
             }
         }
@@ -210,10 +191,9 @@ document.addEventListener('DOMContentLoaded', function() {
             hljs.highlightAll();
         }
         
-        // Show the scroll-to-bottom button if not already at the bottom
         if (chatMessages.scrollHeight > chatMessages.clientHeight + chatMessages.scrollTop) {
             scrollToBottomButton.style.display = 'flex';
-            updateScrollButtonPosition(); // Update the button position
+            updateScrollButtonPosition();
         } else {
             scrollToBottomButton.style.display = 'none';
         }
@@ -249,34 +229,99 @@ document.addEventListener('DOMContentLoaded', function() {
         chatInputArea.classList.toggle('dark-mode');
     });
 
-    // Function to update the scroll button position
     function updateScrollButtonPosition() {
         const sendButtonRect = sendButton.getBoundingClientRect();
         const chatMessagesRect = chatMessages.getBoundingClientRect();
 
-        const buttonTop = sendButtonRect.top - chatMessagesRect.top - scrollToBottomButton.offsetHeight + 75; // 10px margin
-        const buttonRight = chatMessagesRect.right - sendButtonRect.right + 21; // 10px margin and move 40px left
+        const buttonTop = sendButtonRect.top - chatMessagesRect.top - scrollToBottomButton.offsetHeight + 75;
+        const buttonRight = chatMessagesRect.right - sendButtonRect.right + 21;
 
         scrollToBottomButton.style.top = `${buttonTop}px`;
         scrollToBottomButton.style.right = `${buttonRight}px`;
     }
 
-    // Function to scroll to the bottom
     function scrollToBottom() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
         scrollToBottomButton.style.display = 'none';
     }
 
-    // Event listener for the scroll to bottom button
     scrollToBottomButton.addEventListener('click', scrollToBottom);
 
-    // Event listener for scroll to show/hide the button
     chatMessages.addEventListener('scroll', () => {
         if (chatMessages.scrollHeight > chatMessages.clientHeight + chatMessages.scrollTop) {
             scrollToBottomButton.style.display = 'flex';
-            updateScrollButtonPosition(); // Update the button position
+            updateScrollButtonPosition();
         } else {
             scrollToBottomButton.style.display = 'none';
         }
+    });
+
+    settingsButton.addEventListener('click', () => {
+        settingsModal.style.display = 'block';
+        apiKeyInput.value = apiKey;
+        apiUrlInput.value = apiDomain;
+        modelNameInput.value = modelName;
+        settingsChanged = false;
+    });
+
+    apiKeyInput.addEventListener('input', () => {
+        settingsChanged = true;
+    });
+    apiUrlInput.addEventListener('input', () => {
+        settingsChanged = true;
+    });
+    modelNameInput.addEventListener('input', () => {
+        settingsChanged = true;
+    });
+
+    closeButton.addEventListener('click', () => {
+        if (settingsChanged) {
+            if (confirm("设置已修改，是否放弃保存？")) {
+                settingsModal.style.display = 'none';
+                settingsChanged = false;
+            }
+        } else {
+            settingsModal.style.display = 'none';
+        }
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === settingsModal) {
+            if (settingsChanged) {
+                if (confirm("设置已修改，是否放弃保存？")) {
+                    settingsModal.style.display = 'none';
+                    settingsChanged = false;
+                }
+            } else {
+                settingsModal.style.display = 'none';
+            }
+        }
+    });
+
+    saveSettingsButton.addEventListener('click', () => {
+        const newApiKey = apiKeyInput.value.trim();
+        const newApiUrl = apiUrlInput.value.trim();
+        const newModelName = modelNameInput.value.trim();
+        
+        if (newApiKey && newApiUrl && newModelName) {
+            setApiConfig(newApiKey, newApiUrl, newModelName);
+            settingsModal.style.display = 'none';
+            alert('设置已保存！');
+            settingsChanged = false;
+        } else {
+            alert('请填写所有设置项！');
+        }
+    });
+
+    window.addEventListener('beforeunload', (event) => {
+        if (settingsChanged) {
+            event.preventDefault();
+            event.returnValue = "设置已修改，是否放弃保存？";
+            return "设置已修改，是否放弃保存？";
+        }
+    });
+
+    openNewPageButton.addEventListener('click', () => {
+        window.open('https://home.tech-zer.top', '_blank');
     });
 });
