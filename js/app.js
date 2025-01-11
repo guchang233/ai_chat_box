@@ -56,6 +56,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let sendingMessage = false;
 
     async function sendMessage() {
+        const messageText = messageInput.value.trim();
+        if (!messageText && !selectedFile) {
+            return; // 如果输入框为空且没有选择文件，则不发送消息
+        }
         if (sendingMessage) return;
         sendingMessage = true;
         
@@ -324,4 +328,16 @@ document.addEventListener('DOMContentLoaded', function() {
     openNewPageButton.addEventListener('click', () => {
         window.open('https://home.tech-zer.top', '_blank');
     });
+
+    function handleResize() {
+        const navRightItems = document.querySelectorAll('.nav-right > li:not(.theme-toggle-container)');
+        if (window.innerWidth <= 768) {
+            navRightItems.forEach(item => item.style.display = 'none');
+        } else {
+            navRightItems.forEach(item => item.style.display = 'block');
+        }
+    }
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // 初始化时执行一次
 });

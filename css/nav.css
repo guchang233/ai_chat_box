@@ -85,6 +85,9 @@ nav a:active {
     .nav-left, .nav-right {
         justify-content: center; /* 小屏幕时居中对齐 */
     }
+    .nav-right > li:not(.theme-toggle-container) {
+        display: none; /* 小屏幕时隐藏右侧导航项，除了主题切换按钮 */
+    }
 } 
 
 /* 设置按钮样式 */

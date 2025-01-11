@@ -558,44 +558,69 @@ body.dark-mode {
 .modal {
     display: none; /* 初始隐藏 */
     position: fixed; /* 固定定位 */
-    z-index: 1000; /* 设置 z-index */
-    left: 0; /* 左边距 */
-    top: 0; /* 上边距 */
-    width: 100%; /* 宽度 */
-    height: 100%; /* 高度 */
+    z-index: 1; /* 确保在顶层 */
+    left: 0;
+    top: 0;
+    width: 100%; /* 全宽 */
+    height: 100%; /* 全高 */
     overflow: auto; /* 允许滚动 */
-    background-color: rgba(0, 0, 0, 0.4); /* 背景颜色 */
+    background-color: rgba(0, 0, 0, 0.4); /* 半透明背景 */
 }
 
 /* 模态框内容样式 */
 .modal-content {
     background-color: #fefefe; /* 背景颜色 */
+    margin: 15% auto; /* 居中显示 */
     padding: 20px; /* 内边距 */
     border: 1px solid #888; /* 边框 */
     width: 80%; /* 宽度 */
     max-width: 500px; /* 最大宽度 */
     border-radius: 10px; /* 圆角 */
-    position: absolute; /* 改为绝对定位 */
-    top: 0; /* 顶部对齐 */
-    left: 0; /* 左侧对齐 */
-    margin: 20px; /* 添加外边距 */
+    position: relative; /* 相对定位 */
+    color: #333; /* 默认文字颜色 */
 }
 
 /* 关闭按钮样式 */
 .close-button {
-    color: #aaa; /* 文字颜色 */
+    color: #aaa; /* 颜色 */
     float: right; /* 右浮动 */
     font-size: 28px; /* 字体大小 */
-    font-weight: bold; /* 字体粗细 */
+    font-weight: bold; /* 加粗 */
     cursor: pointer; /* 鼠标样式 */
 }
 
-/* 关闭按钮悬停效果 */
 .close-button:hover,
 .close-button:focus {
-    color: black; /* 文字颜色 */
+    color: black; /* 悬停颜色 */
     text-decoration: none; /* 清除下划线 */
     cursor: pointer; /* 鼠标样式 */
+}
+
+/* 深色模式下的设置弹窗样式 */
+body.dark-mode .modal-content {
+    background-color: #333; /* 深色背景 */
+    color: #fff; /* 深色模式文字颜色 */
+    border: 1px solid #555; /* 深色边框 */
+}
+
+body.dark-mode .close-button {
+    color: #ddd; /* 深色模式关闭按钮颜色 */
+}
+
+body.dark-mode .close-button:hover,
+body.dark-mode .close-button:focus {
+    color: #fff; /* 深色模式悬停关闭按钮颜色 */
+}
+
+/* 深色模式下的输入框样式 */
+body.dark-mode .modal-content input[type="text"] {
+    background-color: #444; /* 深色背景 */
+    color: #fff; /* 深色模式文字颜色 */
+    border: 1px solid #666; /* 深色边框 */
+}
+
+body.dark-mode .modal-content input[type="text"]::placeholder {
+    color: #aaa; /* 深色模式占位符颜色 */
 }
 
 /* 模态框输入框样式 */
