@@ -19,8 +19,8 @@
             <li class="theme-toggle-container">
                 <button id="theme-toggle" class="theme-toggle-button"></button>
             </li>
-            <li><a href="javascript:void(0);" onclick="confirmNavigation()" class="navigation-link">OPT1</a></li>
-            <li><a href="javascript:void(0);" onclick="confirmNavigation2()" class="navigation-link">OPT2</a></li>
+            <li><a href="javascript:void(0);" onclick="confirmNavigation()" class="navigation-link">首页</a></li>
+            <li><a href="javascript:void(0);" onclick="confirmNavigation2()" class="navigation-link">音视频通话</a></li>
         </ul>
         <ul class="nav-right">
             <li class="stop-button-container"></li>
@@ -30,7 +30,7 @@
     <div class="chat-container">
         <div class="chat-header">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <span class="version">v0.0.5</span>
+                <span class="version">v0.0.6</span>
             </div>
             <h1>AI CHAT_BOX</h1>
             <input type="file" id="file-input" style="display: none;" accept="image/*">
@@ -70,17 +70,24 @@
         </div>
     </div>
     
-    <script src="js/api.js"></script>
+    <script src="js/api.js" defer></script>
+    <script src="js/app/utils.js"></script>
+    <script src="js/app/file-upload.js"></script>
+    <script src="js/app/message.js"></script>
+    <script src="js/app/theme.js"></script>
+    <script src="js/app/scroll.js"></script>
+    <script src="js/app/settings.js"></script>
+    <script src="js/app/responsive.js"></script>
     <script src="js/app.js"></script>
     <script>
         function confirmNavigation() {
             if (confirm("确定要跳转到首页吗？未保存内容可能丢失！")) {
-                window.location.href = 'https://';
+                window.location.href = 'https://home.tech-zer.top';
             }
         }
         function confirmNavigation2() {
             if (confirm("确定要跳转到首页吗？未保存内容可能丢失！")) {
-                window.location.href = 'https://';
+                window.location.href = 'https://test.tech-zer.top';
             }
         }
     </script>

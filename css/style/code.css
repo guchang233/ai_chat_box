@@ -1,0 +1,121 @@
+/* code.css */
+
+.ai-message code {
+    color: #d4d4d4;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 14px;
+}
+
+.ai-message p code {
+    background-color: #1e1e1e;
+    border: 1px solid #404040;
+    border-radius: 3px;
+    color: #d4d4d4;
+    padding: 2px 4px;
+}
+
+.ai-message pre {
+    background-color: #1e1e1e !important;
+    border: 1px solid #404040;
+    border-radius: 6px;
+    margin: 1em 0;
+    overflow: auto;
+    padding: 16px;
+    position: relative;
+}
+
+.ai-message pre::-webkit-scrollbar {
+    height: 14px;
+    width: 14px;
+}
+
+.ai-message pre::-webkit-scrollbar-thumb {
+    background-color: #424242;
+    border: 3px solid #1e1e1e;
+    border-radius: 7px;
+}
+
+.ai-message pre::-webkit-scrollbar-track {
+    background-color: #1e1e1e;
+}
+
+.ai-message pre code::selection {
+    background-color: #264f78;
+}
+
+.copy-button {
+    background-color: #3c3c3c;
+    border: none;
+    border-radius: 4px;
+    color: #cccccc;
+    cursor: pointer;
+    opacity: 0.8;
+    padding: 4px 8px;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    transition: all 0.2s ease;
+}
+
+.copy-button:hover {
+    background-color: #505050;
+    opacity: 1;
+}
+
+.copy-button.copied {
+    background-color: #4ec9b0;
+    color: #1e1e1e;
+}
+
+.hljs-built_in {
+    color: #4ec9b0;
+}
+
+.hljs-class {
+    color: #4ec9b0;
+}
+
+.hljs-comment {
+    color: #6a9955;
+    font-style: italic;
+}
+
+.hljs-function {
+    color: #dcdcaa;
+}
+
+.hljs-keyword {
+    color: #569cd6;
+}
+
+.hljs-literal {
+    color: #569cd6;
+}
+
+.hljs-number {
+    color: #b5cea8;
+}
+
+.hljs-operator {
+    color: #d4d4d4;
+}
+
+.hljs-params {
+    color: #9cdcfe;
+}
+
+.hljs-property {
+    color: #9cdcfe;
+}
+
+.hljs-string {
+    color: #ce9178;
+}
+
+.hljs-title {
+    color: #dcdcaa;
+}
+
+.hljs-variable {
+    color: #9cdcfe;
+} 

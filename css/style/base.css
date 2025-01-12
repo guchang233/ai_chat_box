@@ -1,0 +1,13 @@
+/* base.css */
+
+body {
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Arial', sans-serif;
+    font-size: 18px;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
