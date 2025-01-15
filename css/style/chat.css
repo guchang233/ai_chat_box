@@ -40,3 +40,29 @@
     padding: 20px;
 }
 
+
+.chat-messages .message p {
+    margin: 0.5em 0;
+}
+
+.chat-messages .message p:first-child {
+    margin-top: 0;
+}
+
+.chat-messages .message p:last-child {
+    margin-bottom: 0;
+}
+
+.chat-messages .message .MathJax {
+    font-size: 1em;
+    overflow-x: auto;
+    display: inline-block;
+    white-space: normal;
+}
+
+.chat-messages .message .MathJax_Display {
+    display: block;
+    text-align: left;
+    margin: 0.5em 0;
+    overflow-x: auto;
+}

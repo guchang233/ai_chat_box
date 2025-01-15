@@ -137,4 +137,43 @@ async function sendMessage() {
             }
         }
     }
+    MathJax.typeset();
+}
+
+function displayMessage(message) {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', message.sender);
+
+    let messageContent = message.text;
+    if (message.sender === 'ai') {
+        messageContent = marked.parse(messageContent);
+    }
+    messageDiv.innerHTML = messageContent;
+
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    if (message.sender === 'ai') {
+        messageDiv.querySelectorAll('pre code').forEach(block => {
+            hljs.highlightBlock(block);
+            const copyButton = document.createElement('button');
+            copyButton.textContent = '复制';
+            copyButton.classList.add('copy-button');
+            copyButton.addEventListener('click', () => {
+                navigator.clipboard.writeText(block.textContent).then(() => {
+                    copyButton.textContent = '已复制';
+                    setTimeout(() => {
+                        copyButton.textContent = '复制';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('复制失败', err);
+                    copyButton.textContent = '复制失败';
+                    setTimeout(() => {
+                        copyButton.textContent = '复制';
+                    }, 2000);
+                });
+            });
+            block.parentNode.insertBefore(copyButton, block.nextSibling);
+        });
+    }
 }
