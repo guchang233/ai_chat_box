@@ -21,3 +21,7 @@
 
 /* Import miscellaneous styles */
 @import url('style/misc.css');
+
+.message {
+    line-height: 1.4;
+}

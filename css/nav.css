@@ -20,15 +20,6 @@ nav {
     align-items: center; /* 垂直居中对齐 */
 }
 
-/* 右侧导航项目 */
-.nav-right {
-    list-style: none; /* 清除列表样式 */
-    margin: 0; /* 清除外边距 */
-    padding: 0; /* 清除内边距 */
-    display: flex; /* 使用 Flexbox 布局 */
-    align-items: center; /* 垂直居中对齐 */
-    gap: 15px; /* 设置项目之间的间距 */
-}
 
 /* 所有导航链接的基础样式 */
 nav a {
@@ -89,7 +80,6 @@ nav a:active {
         display: none; /* 小屏幕时隐藏右侧导航项，除了主题切换按钮 */
     }
 } 
-
 /* 设置按钮样式 */
 #settings-button {
     color: white; /* 白色文字 */

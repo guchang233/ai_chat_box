@@ -120,7 +120,7 @@ async function sendMessage() {
         }, fileData).finally(() => {
             stopButton.style.display = 'none';
             selectedFile = null;
-            attachButton.textContent = '附件';
+            attachButton.textContent = '✚';
         });
     } catch (error) {
         console.error("Error:", error);
