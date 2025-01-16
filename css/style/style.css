@@ -29,6 +29,52 @@
     display: none !important; /* Chrome, Safari and Opera */
 }
 
+.chat-messages .message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 80%;
+    word-wrap: break-word;
+    display: inline-block;
+    clear: both;
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+}
+
+.chat-messages .message p {
+    margin: 0.5em 0;
+}
+
+.chat-messages .message p:first-child {
+    margin-top: 0;
+}
+
+.chat-messages .message p:last-child {
+    margin-bottom: 0;
+}
+
+.chat-messages .message .MathJax {
+    font-size: 1em;
+    overflow-x: auto;
+    display: inline-block;
+    white-space: normal;
+    line-height: 1.5;
+}
+
+.chat-messages .message .MathJax_Display {
+    display: block;
+    text-align: left;
+    margin: 0.5em 0;
+    overflow-x: auto;
+    line-height: 1.5;
+}
+
+body.dark-mode .chat-messages .message .MathJax,
+body.dark-mode .chat-messages .message .MathJax_Display {
+    color: #fff;
+}
+
 /* 主题滑块样式 */
 .theme-sliders {
     display: flex;

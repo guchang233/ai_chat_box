@@ -118,9 +118,33 @@ async function sendMessage() {
                 }
             });
         }, fileData).finally(() => {
-            stopButton.style.display = 'none';
-            selectedFile = null;
-            attachButton.textContent = '✚';
+            messageDiv.innerHTML = marked.parse(currentText);
+            const codeBlocks = messageDiv.querySelectorAll('pre code');
+            codeBlocks.forEach(block => {
+                if (!block.classList.contains('hljs')) {
+                    hljs.highlightElement(block);
+                    
+                    const pre = block.parentElement;
+                    if (!pre.querySelector('.copy-button')) {
+                        const copyButton = document.createElement('button');
+                        copyButton.className = 'copy-button';
+                        copyButton.textContent = '复制';
+                        copyButton.onclick = async () => {
+                            await navigator.clipboard.writeText(block.textContent);
+                            copyButton.textContent = '已复制!';
+                            copyButton.classList.add('copied');
+                            setTimeout(() => {
+                                copyButton.textContent = '复制';
+                                copyButton.classList.remove('copied');
+                            }, 2000);
+                        };
+                        pre.appendChild(copyButton);
+                    }
+                }
+            });
+            MathJax.typesetPromise().then(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            });
         });
     } catch (error) {
         console.error("Error:", error);
@@ -137,7 +161,6 @@ async function sendMessage() {
             }
         }
     }
-    MathJax.typeset();
 }
 
 function displayMessage(message) {
@@ -176,4 +199,5 @@ function displayMessage(message) {
             block.parentNode.insertBefore(copyButton, block.nextSibling);
         });
     }
+    MathJax.typesetPromise();
 }
