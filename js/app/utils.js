@@ -14,6 +14,15 @@ async function readFileAsBase64(file, onProgress) {
 }
 
 function addMessage(message, sender, fileData = null) {
+    const session = window.sessionManager.getCurrentSession();
+    // 检查最后一条消息是否重复
+    const lastMessage = session.messages[session.messages.length - 1];
+    if (!lastMessage || lastMessage.content !== message) {
+        session.messages.push({
+            role: sender === 'user' ? 'user' : 'assistant',
+            content: message
+        });
+    }
     const chatMessages = document.getElementById('chat-messages');
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message');

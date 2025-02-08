@@ -3,6 +3,9 @@ let sendingMessage = false;
 let editingMessage = false;
 let editStartIndex = -1;
 
+const sendButton = document.getElementById('send-button');
+const stopButton = document.getElementById('stop-button');
+
 function setupMessageSending() {
     const sendButton = document.getElementById('send-button');
     const messageInput = document.getElementById('message-input');
@@ -17,9 +20,16 @@ function setupMessageSending() {
     });
 }
 
-async function sendMessage() {
+function toggleSendButtonState() {
+    if (!sendButton) return;
     const messageInput = document.getElementById('message-input');
-    const sendButton = document.getElementById('send-button');
+    sendButton.disabled = !messageInput.value.trim();
+}
+
+async function sendMessage() {
+    if (!sendButton || !stopButton) return;
+    
+    const messageInput = document.getElementById('message-input');
     const attachButton = document.getElementById('attach-button');
     const body = document.body;
     const chatMessages = document.getElementById('chat-messages');
@@ -43,7 +53,7 @@ async function sendMessage() {
         console.log("fileData:", fileData);
     }
     messageInput.value = '';
-    sendButton.disabled = true;
+    toggleSendButtonState();
 
     if (message) {
         addMessage(message, 'user');
@@ -54,7 +64,10 @@ async function sendMessage() {
 
     const loadingDiv = document.createElement('div');
     loadingDiv.className = 'loading-message';
-    loadingDiv.innerHTML = '<div class="loading-spinner"></div>';
+    loadingDiv.innerHTML = `
+        <div class="loading-spinner"></div>
+        <span class="thinking-text">思考中...</span>
+    `;
     messageContainer.appendChild(loadingDiv);
     chatMessages.appendChild(messageContainer);
 
@@ -67,33 +80,41 @@ async function sendMessage() {
     contentDiv.className = 'typing';
     messageDiv.appendChild(contentDiv);
 
-    const stopButton = document.createElement('button');
-        stopButton.className = 'stop-button';
-        stopButton.textContent = '停止';
-        stopButton.style.display = 'none';
-        const sendButtonContainer = document.querySelector('.chat-input-area > div');
-        sendButtonContainer.appendChild(stopButton);
+    const stopController = new AbortController();
 
-        let stop = false;
-        stopButton.addEventListener('click', () => {
-            stop = true;
-            stopButton.style.display = 'none';
-            sendButton.disabled = false;
-            sendingMessage = false;
-        });
+    const abortHandler = () => {
+        stopController.abort();
+        toggleSendButtonState();
+        sendingMessage = false;
+        console.log('用户中止了请求');
+    };
+    stopButton.addEventListener('click', abortHandler);
 
     try {
         let currentText = '';
         
         messageContainer.removeChild(loadingDiv);
+        contentDiv.innerHTML = ''; // 清空初始内容
         messageContainer.appendChild(messageDiv);
+        sendButton.style.display = 'none';
         stopButton.style.display = 'block';
 
         await fetchAIResponse(message, (chunk) => {
-            if (stop) return;
+            if (stopController.signal.aborted) return;
             currentText += chunk;
             contentDiv.innerHTML = marked.parse(currentText);
             
+            // 实时更新AI回复
+            const aiMessage = session.messages.find(m => 
+                m.role === 'assistant' && 
+                m.content === currentText
+            );
+            if (!aiMessage) {
+                session.messages.push({ role: 'assistant', content: currentText });
+            } else {
+                aiMessage.content = currentText;
+            }
+
             const codeBlocks = messageDiv.querySelectorAll('pre code');
             codeBlocks.forEach(block => {
                 if (!block.classList.contains('hljs')) {
@@ -150,8 +171,11 @@ async function sendMessage() {
         console.error("Error:", error);
         messageDiv.innerHTML = '<div class="ai-content">出错了😟注意配置是否正确 , 不要频繁操作</div>';
     } finally {
-        sendingMessage = false;
+        stopButton.removeEventListener('click', abortHandler);
+        sendButton.style.display = 'block';
+        stopButton.style.display = 'none';
         sendButton.disabled = false;
+        sendingMessage = false;
         if (contentDiv.childNodes.length > 0) {
             const lastChild = contentDiv.childNodes[contentDiv.childNodes.length - 1];
             if (lastChild.nodeType === Node.TEXT_NODE) {
@@ -161,6 +185,8 @@ async function sendMessage() {
             }
         }
     }
+
+    window.sessionManager.persist();
 }
 
 function displayMessage(message) {
@@ -200,4 +226,11 @@ function displayMessage(message) {
         });
     }
     MathJax.typesetPromise();
+}
+
+function safeClearContainer(containerId) {
+    const container = document.getElementById(containerId);
+    const clone = container.cloneNode(false); // 只克隆容器本身
+    container.parentNode.replaceChild(clone, container);
+    return clone; // 返回新容器以便重新初始化
 }

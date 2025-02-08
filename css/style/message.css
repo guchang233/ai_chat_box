@@ -99,4 +99,14 @@
     max-height: 200px;
     max-width: 100%;
     margin-top: 5px;
+}
+
+.thinking-text {
+    margin-left: 12px;
+    color: #666;
+    font-size: 14px;
+}
+
+.dark-mode .thinking-text {
+    color: #aaa;
 } 

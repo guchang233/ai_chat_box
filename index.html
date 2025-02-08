@@ -28,6 +28,7 @@
                 <span class="version">v0.1.2</span>
             </div>
             <h1>AI CHAT_BOX</h1>
+            <button id="clear-chat-button">清空记录</button>
             <a href="javascript:void(0);" id="settings-button" class="navigation-link">设置</a>
         </div>
         <div class="chat-messages" id="chat-messages">
@@ -46,7 +47,12 @@
                         <textarea id="message-input" placeholder="ctrl + enter发送..."></textarea>
                     </div>
                     <input type="file" id="file-input" style="display: none;">
-                    <button id="send-button">➤</button>
+                    <div style="position: relative">
+                        <div class="button-container">
+                            <button id="send-button">➤</button>
+                            <button id="stop-button">■</button>
+                        </div>
+                    </div>
                     <button id="attach-button">✚</button>
                     <input type="file" id="file-input" style="display: none;" accept="image/*">
                 </div>
@@ -78,11 +84,18 @@
                 <input type="text" id="model-name-input" placeholder="请输入 Model Name">
             </div>
             
+            <label for="preset-select">预设配置:</label>
+            <select id="preset-select" class="preset-select">
+                <option value="custom">自定义</option>
+                <option value="default">默认配置</option>
+                <option value="siliconflow">硅基流动</option>
+            </select>
+            
             <button id="save-settings-button">保存</button>
             <button id="copy-github-link-button"class="open-github">关于</button>
         </div>
     </div>
-    
+    <script src="js/app/session.js"></script>
     <script src="js/api.js" defer></script>
     <script src="js/app/utils.js"></script>
     <script src="js/app/file-upload.js"></script>
