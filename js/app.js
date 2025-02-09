@@ -38,3 +38,22 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('stop-button').style.display = 'none';
     document.getElementById('send-button').disabled = false;
 });
+
+function visualizeReasoning(response) {
+    // 解析模型的中间状态
+    const reasoningSteps = response.metadata.thought_process;
+    
+    // 创建可视化元素
+    const reasoningContainer = document.createElement('div');
+    reasoningContainer.className = 'reasoning-visualization';
+    
+    // 添加推理步骤展示
+    reasoningSteps.forEach(step => {
+        const stepElement = document.createElement('div');
+        stepElement.textContent = `🤔 [推理步骤] ${step}`;
+        reasoningContainer.appendChild(stepElement);
+    });
+    
+    // 插入到消息容器中
+    document.getElementById('chat-messages').appendChild(reasoningContainer);
+}

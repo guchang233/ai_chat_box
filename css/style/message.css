@@ -11,9 +11,10 @@
 }
 
 .ai-message {
-    background-color: #2d2d2d;
+    color: #333 !important;
+    background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.05);
     border-radius: 10px;
-    color: #ffffff;
     font-size: 13px;
     height: auto;
     line-height: 1.5;
@@ -66,12 +67,14 @@
 }
 
 .loading-spinner {
-    animation: spin 1s linear infinite;
-    border: 3px solid rgba(255, 255, 255, 0.2);
-    border-left-color: #ffffff;
-    border-radius: 50%;
-    height: 20px;
-    width: 20px;
+    border: 3px solid;
+    border-color: #007bff transparent transparent transparent;
+    animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .message {
@@ -83,7 +86,8 @@
 }
 
 .user-message {
-    background-color: #007bff;
+    background: linear-gradient(145deg, #007bff, #0062cc);
+    box-shadow: 2px 2px 8px rgba(0,123,255,0.2);
     color: white;
     margin-bottom: 8px;
     margin-left: auto;
@@ -109,4 +113,63 @@
 
 .dark-mode .thinking-text {
     color: #aaa;
+}
+
+/* 亮色模式强制黑色文字 */
+body:not(.dark-mode) .ai-message,
+body:not(.dark-mode) .ai-message *:not(code) {
+    color: #333 !important;
+}
+
+/* 暗色模式保持白色 */
+body.dark-mode .ai-message {
+    background: #444 !important;
+    background-image: none !important; /* 清除亮色模式渐变 */
+    color: #fff !important;
+}
+
+/* 保持亮色模式样式 */
+body:not(.dark-mode) .ai-message {
+    background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+    color: #333 !important;
+}
+
+#message-input {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+#message-input:focus {
+    border-color: rgba(0,123,255,0.3);
+    box-shadow: 0 0 12px rgba(0,123,255,0.1);
+}
+
+body.dark-mode #message-input:focus {
+    border-color: rgba(100,150,255,0.3);
+}
+
+.scroll-to-bottom-button {
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+body.dark-mode .scroll-to-bottom-button {
+    background: rgba(40,40,40,0.9);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* 代码块文字颜色 */
+.ai-message code {
+    color: #2d2d2d !important;
+}
+
+.ai-message p code {
+    color: #2d2d2d !important;
+    background-color: rgba(0,0,0,0.06);
+}
+
+body.dark-mode .ai-message code {
+    color: #d4d4d4 !important;
 } 

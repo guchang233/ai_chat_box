@@ -67,3 +67,62 @@
 #stop-button:hover {
     background-color: #0056b3;
 }
+
+/* 添加按钮微交互 */
+#send-button, #stop-button, #attach-button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#send-button:hover {
+    transform: scale(1.05) rotate(-15deg);
+    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+}
+
+#stop-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 8px rgba(255,68,68,0.4);
+}
+
+/* 暗色模式适配 */
+body.dark-mode #send-button, 
+body.dark-mode #stop-button {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* 清空聊天按钮和设置按钮 */
+button#clear-chat-button, 
+a#settings-button.navigation-link {
+    all: initial; /* 完全重置样式 */
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 8px !important;
+    color: white !important;
+    cursor: pointer;
+    font: inherit !important;
+    font-size: 14px !important;
+    padding: 6px 12px !important;
+    margin: 0 2px !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    box-sizing: border-box !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+}
+
+/* 悬停状态 */
+button#clear-chat-button:hover,
+a#settings-button.navigation-link:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* 暗色模式 */
+body.dark-mode button#clear-chat-button,
+body.dark-mode a#settings-button.navigation-link {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}

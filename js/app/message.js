@@ -73,9 +73,6 @@ async function sendMessage() {
 
     const messageDiv = document.createElement('div');
     messageDiv.className = 'ai-message';
-    if (body.classList.contains('dark-mode')) {
-        messageDiv.classList.add('dark-mode');
-    }
     const contentDiv = document.createElement('div');
     contentDiv.className = 'typing';
     messageDiv.appendChild(contentDiv);

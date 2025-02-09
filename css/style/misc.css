@@ -40,12 +40,12 @@
 }
 
 .scroll-to-bottom-button:active {
-    transform: translateY(0);
+    transform: translateY(50%);
 }
 
 .scroll-to-bottom-button:hover {
     opacity: 1;
-    transform: translateY(-2px);
+    transform: translateY(10%);
 }
 
 .scroll-to-bottom-button svg {
