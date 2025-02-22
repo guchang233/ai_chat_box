@@ -11,7 +11,9 @@
 }
 
 .ai-message {
-    background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+    background: linear-gradient(145deg, rgba(248,249,250,0.9) 0%, rgba(233,236,239,0.9) 100%);
+    border-left: 4px solid #007bff;
+    backdrop-filter: blur(4px);
     box-shadow: 2px 2px 6px rgba(0,0,0,0.05);
     border-radius: 10px;
     color: #333 !important;
@@ -86,9 +88,10 @@
 }
 
 .user-message {
-    background: linear-gradient(145deg, #007bff, #0062cc);
+    background: linear-gradient(145deg, rgba(0,123,255,0.9) 0%, rgba(0,98,204,0.9) 100%);
+    border-right: 4px solid rgba(255,255,255,0.3);
+    color: white !important;
     box-shadow: 2px 2px 8px rgba(0,123,255,0.2);
-    color: white;
     margin-bottom: 8px;
     margin-left: auto;
     position: relative;
@@ -172,4 +175,61 @@ body.dark-mode .scroll-to-bottom-button {
 
 body.dark-mode .ai-message code {
     color: #d4d4d4 !important;
+}
+
+/* 消息容器布局优化 */
+.chat-messages .message-container {
+    width: 100%;
+    display: flex;
+    justify-content: var(--message-align); /* 通过变量控制对齐方向 */
+    padding: 6px 12px;
+}
+
+.chat-messages .user-container {
+    --message-align: flex-end;
+}
+
+.chat-messages .ai-container {
+    --message-align: flex-start;
+}
+
+/* 保持原有气泡样式 */
+.chat-messages .message {
+    max-width: 75%;
+    min-width: 120px;
+    position: relative;
+    transform: translateY(10px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.3s ease,
+                transform 0.3s ease;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
+    border: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(8px);
+}
+
+.chat-messages .message.visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+    .chat-messages .message {
+        max-width: 90%;
+    }
+}
+
+/* 修复代码块溢出 */
+.chat-messages .message pre {
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* 数学公式响应式 */
+.chat-messages .message .MathJax_Display {
+    max-width: 100%;
+    overflow-x: auto;
 } 

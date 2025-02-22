@@ -95,6 +95,10 @@ function addMessage(sender, content, fileData = null) {
         hljs.highlightAll();
         MathJax.typesetPromise();
     }
+
+    // 在消息创建后添加
+    messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
+    setTimeout(() => messageDiv.classList.add('visible'), 10);
 }
 
 function displayMessage(message) {
