@@ -5,20 +5,28 @@ class SessionManager {
   }
 
   createNewSession() {
-    return {
+    const newSession = {
       id: Date.now().toString(),
       name: `会话 ${this.sessions.length + 1}`,
-      messages: [
-        {
-          role: "system",
-          content: "请专注于用户的最新问题",
-          timestamp: Date.now()
-        }
-      ],
+      messages: [{ role: 'system', content: '请使用中文回复。' }],
       config: {
-        maxHistory: 3 // 限制历史记录为3轮对话
-      }
-    };
+        apiKey: '',
+        apiDomain: '',
+        modelName: '',
+        preset: 'default',
+        maxHistory: 10
+      },
+      createdAt: new Date()
+    }
+    // 初始化时继承全局配置
+    const prevSession = this.getCurrentSession();
+    if (prevSession) {
+        newSession.config = { ...prevSession.config };
+    }
+    this.sessions.push(newSession)
+    this.currentSessionId = newSession.id
+    this.persist()
+    return newSession.id
   }
 
   getCurrentSession() {
@@ -71,15 +79,5 @@ class SessionManager {
       });
       document.body.appendChild(modal);
     });
-  }
-
-  getContextWindow() {
-    return this.getCurrentSession().messages
-        .filter(msg => {
-            // 过滤系统消息和10分钟前的旧消息
-            return msg.role !== 'system' && 
-                Date.now() - msg.timestamp < 600000; 
-        })
-        .slice(-4); // 保留最多2轮对话（用户+AI各2条）
   }
 }

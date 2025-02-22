@@ -160,84 +160,16 @@ body.dark-mode .scroll-to-bottom-button {
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-/* 亮色模式代码块 */
-body:not(.dark-mode) .ai-message pre code {
-    color: #333 !important;
-    background-color: #f3f4f6 !important;
-    border: 1px solid #e5e7eb !important;
+/* 代码块文字颜色 */
+.ai-message code {
+    color: #2d2d2d !important;
 }
 
-body:not(.dark-mode) .ai-message code:not(pre code) {
-    color: #dc2626 !important;
-    background-color: #f9fafb !important;
-    padding: 2px 4px;
-    border-radius: 4px;
-    border: 1px solid #e5e7eb;
+.ai-message p code {
+    color: #2d2d2d !important;
+    background-color: rgba(0,0,0,0.06);
 }
 
-/* 暗色模式保持原样 */
 body.dark-mode .ai-message code {
     color: #d4d4d4 !important;
-}
-
-body.dark-mode .ai-message pre code {
-    background-color: #1e1e1e !important;
-    border-color: #444;
-}
-
-/* 亮色模式代码容器 */
-body:not(.dark-mode) .ai-message pre {
-    background-color: #f6f8fa !important;
-    border: 1px solid #e1e4e8 !important;
-    box-shadow: 0 1px 2px rgba(27,31,35,0.075) !important;
-}
-
-/* 暗色模式保持原样 */
-body.dark-mode .ai-message pre {
-    background-color: #2d2d2d !important;
-    border-color: #404040 !important;
-}
-
-/* 代码文字颜色保持原设置 */
-.ai-message code {
-    color: inherit !important; /* 继承父级颜色 */
-}
-
-/* 覆盖highlight.js主题 */
-body:not(.dark-mode) .hljs {
-    color: #24292e !important;
-    background: transparent !important;
-}
-
-body:not(.dark-mode) .hljs-keyword {
-    color: #d73a49 !important; /* 关键字-红色 */
-}
-
-body:not(.dark-mode) .hljs-title {
-    color: #6f42c1 !important; /* 类名-紫色 */
-}
-
-body:not(.dark-mode) .hljs-string {
-    color: #032f62 !important; /* 字符串-深蓝 */
-}
-
-body:not(.dark-mode) .hljs-comment {
-    color: #6a737d !important; /* 注释-灰色 */
-}
-
-body:not(.dark-mode) .hljs-attr,
-body:not(.dark-mode) .hljs-attribute {
-    color: #005cc5 !important; /* 属性-蓝色 */
-}
-
-body:not(.dark-mode) .hljs-built_in {
-    color: #e36209 !important; /* 内置函数-橙色 */
-}
-
-body:not(.dark-mode) .hljs-number {
-    color: #005cc5 !important; /* 数字-蓝色 */
-}
-
-body:not(.dark-mode) .hljs-literal {
-    color: #d73a49 !important; /* 字面量-红色 */
 } 

@@ -13,35 +13,15 @@ async function readFileAsBase64(file, onProgress) {
     });
 }
 
-function addMessage(message, sender, fileData) {
+function addMessage(message, sender, fileData = null) {
     const session = window.sessionManager.getCurrentSession();
-    
-    // 生成稳定指纹（移除时间戳）
-    const fingerprint = CryptoJS.MD5(
-        `${sender}_${message}_${fileData?.name || ''}`
-    ).toString();
-
-    // 三重校验：内容、角色、时间
-    const isDuplicate = session.messages.some(m => 
-        m.fingerprint === fingerprint || 
-        (m.role === (sender === 'user' ? 'user' : 'assistant') &&
-         Date.now() - m.timestamp < 1000)
-    );
-
-    if (!isDuplicate) {
-        const newMessage = {
+    // 检查最后一条消息是否重复
+    const lastMessage = session.messages[session.messages.length - 1];
+    if (!lastMessage || lastMessage.content !== message) {
+        session.messages.push({
             role: sender === 'user' ? 'user' : 'assistant',
-            content: message,
-            fingerprint,
-            timestamp: Date.now()
-        };
-
-        // 强制角色交替
-        const lastMessage = session.messages[session.messages.length - 1];
-        if (lastMessage?.role === sender) {
-            session.messages.pop(); // 移除最后一条同角色消息
-        }
-        session.messages.push(newMessage);
+            content: message
+        });
     }
     const chatMessages = document.getElementById('chat-messages');
     const messageDiv = document.createElement('div');
@@ -95,9 +75,4 @@ function removeLoadingMessage(loadingDiv) {
     if (loadingDiv) {
         chatMessages.removeChild(loadingDiv);
     }
-}
-
-// 新增文件哈希生成函数
-function getFileHash(fileData) {
-    return CryptoJS.MD5(fileData.data).toString();
 }
