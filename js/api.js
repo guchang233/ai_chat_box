@@ -117,3 +117,39 @@ function setApiConfig(newApiKey, newApiDomain, newModelName) {
   session.messages = [{ role: 'system', content: '请使用中文回复。' }]
   window.sessionManager.persist()
 }
+
+function validateRequest(messages) {
+    // 确保最后一条是用户消息
+    const last = messages[messages.length - 1];
+    if (last?.role !== 'user') {
+        throw new Error("无效的对话上下文");
+    }
+    
+    // 检查消息交替
+    let prevRole = '';
+    for (const msg of messages) {
+        if (msg.role === prevRole) {
+            throw new Error("连续的同角色消息");
+        }
+        prevRole = msg.role;
+    }
+}
+
+async function sendToAPI() {
+    const context = window.sessionManager.getContextWindow();
+    
+    // 仅保留最后1轮有效对话
+    const validMessages = context
+        .filter(msg => msg.role !== 'system')
+        .slice(-2);
+
+    const payload = {
+        messages: [
+            {
+                role: "system",
+                content: "请直接回答用户的最新问题，忽略之前的对话历史。"
+            },
+            ...validMessages
+        ]
+    };
+}

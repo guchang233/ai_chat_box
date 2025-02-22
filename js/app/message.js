@@ -102,15 +102,7 @@ async function sendMessage() {
             contentDiv.innerHTML = marked.parse(currentText);
             
             // 实时更新AI回复
-            const aiMessage = session.messages.find(m => 
-                m.role === 'assistant' && 
-                m.content === currentText
-            );
-            if (!aiMessage) {
-                session.messages.push({ role: 'assistant', content: currentText });
-            } else {
-                aiMessage.content = currentText;
-            }
+            updateMessageInSession(currentText);
 
             const codeBlocks = messageDiv.querySelectorAll('pre code');
             codeBlocks.forEach(block => {
@@ -230,4 +222,27 @@ function safeClearContainer(containerId) {
     const clone = container.cloneNode(false); // 只克隆容器本身
     container.parentNode.replaceChild(clone, container);
     return clone; // 返回新容器以便重新初始化
+}
+
+hljs.configure({
+    ignoreUnescapedHTML: true,
+    cssSelector: 'pre code',
+    languages: ['javascript', 'python', 'java', 'cpp', 'xml', 'bash']
+});
+
+function updateMessageInSession(currentText) {
+    const session = window.sessionManager.getCurrentSession();
+    const lastAiMessage = session.messages.reverse().find(m => m.role === 'assistant');
+    
+    if (lastAiMessage) {
+        lastAiMessage.content = currentText;
+        lastAiMessage.fingerprint = CryptoJS.MD5(currentText).toString();
+    } else {
+        session.messages.push({
+            role: 'assistant',
+            content: currentText,
+            fingerprint: CryptoJS.MD5(currentText).toString(),
+            timestamp: Date.now()
+        });
+    }
 }
