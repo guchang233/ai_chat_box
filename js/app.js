@@ -14,6 +14,15 @@ document.addEventListener('DOMContentLoaded', function() {
     setupResponsiveDesign();
     window.sessionManager = new SessionManager();
     
+    // 确保默认配置生效
+    if (!window.sessionManager.getCurrentSession().config.apiDomain) {
+        window.sessionManager.getCurrentSession().config = {
+            apiKey: '',
+            apiDomain: 'https://gemini.tech-zer.top/v1', // 带API版本路径
+            modelName: 'gemini-2.0-flash-exp'
+        };
+    }
+
     // 初始化输入框值
     const session = window.sessionManager.getCurrentSession();
     document.getElementById('api-key-input').value = session.config.apiKey;

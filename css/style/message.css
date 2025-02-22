@@ -11,10 +11,10 @@
 }
 
 .ai-message {
-    color: #333 !important;
     background: linear-gradient(145deg, #f8f9fa, #e9ecef);
     box-shadow: 2px 2px 6px rgba(0,0,0,0.05);
     border-radius: 10px;
+    color: #333 !important;
     font-size: 13px;
     height: auto;
     line-height: 1.5;

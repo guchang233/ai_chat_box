@@ -39,7 +39,7 @@ function addMessage(message, sender, fileData = null) {
         messageDiv.classList.add('ai-message');
     }
     let processedMessage = message;
-    if (fileData && fileData.type.startsWith('image/')) {
+    if (fileData && typeof fileData === 'object' && fileData.type && fileData.type.startsWith('image/')) {
         processedMessage = `<img src="data:${fileData.type};base64,${fileData.data}" alt="Uploaded Image" style="max-width: 100%; max-height: 200px; border-radius: 6px; margin-top: 5px;">`;
     }
     messageDiv.innerHTML = `<span style="font-size: 14px;">${processedMessage}</span>`;
