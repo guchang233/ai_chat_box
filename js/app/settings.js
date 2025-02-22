@@ -18,16 +18,8 @@ function setupSettingsModal() {
     let settingsChanged = false;
 
     const PRESETS = {
-        default: { 
-            apiKey: 'AIzaSyAP2oSzARft7Hk7I8lpu-6YVqNotJEyl5U', 
-            apiDomain: 'https://gemini.tech-zer.top/v1',
-            modelName: 'gemini-2.0-flash-exp' 
-        },
-        siliconflow: { 
-            apiKey: 'sk-lxmwbpakbgskicxtzoqaxbzdhubfpszjfvkyoosakfzntjjj', 
-            apiDomain: 'https://api.siliconflow.cn/v1',
-            modelName: 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B' 
-        }
+        default: { apiKey: 'AIzaSyAP2oSzARft7Hk7I8lpu-6YVqNotJEyl5U', apiDomain: 'https://gemini.tech-zer.top', modelName: 'gemini-2.0-flash-exp' },
+        siliconflow: { apiKey: 'sk-lxmwbpakbgskicxtzoqaxbzdhubfpszjfvkyoosakfzntjjj', apiDomain: 'https://api.siliconflow.cn', modelName: 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B' }
     };
 
     if (settingsButton) {

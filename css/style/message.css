@@ -11,23 +11,22 @@
 }
 
 .ai-message {
-    background: linear-gradient(145deg, rgba(248,249,250,0.9) 0%, rgba(233,236,239,0.9) 100%);
-    border-left: 4px solid #007bff;
-    backdrop-filter: blur(4px);
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.05);
+    background-color: #2d2d2d;
     border-radius: 10px;
-    color: #333 !important;
-    font-size: 13px;
+    color: #ffffff;
+    font-size: 15px;
     height: auto;
-    line-height: 1.5;
+    line-height: 1.6;
     min-height: 18px;
     overflow: hidden;
-    padding: 12px 16px;
+    padding: 16px 20px;
     width: auto;
+    margin-bottom: 12px;
 }
 
 .ai-message p {
-    margin: 0 0 16px 0;
+    margin: 0 0 12px 0;
+    letter-spacing: 0.3px;
 }
 
 .ai-message p:last-child {
@@ -69,14 +68,12 @@
 }
 
 .loading-spinner {
-    border: 3px solid;
-    border-color: #007bff transparent transparent transparent;
-    animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    animation: spin 1s linear infinite;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-left-color: #ffffff;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
 }
 
 .message {
@@ -88,10 +85,8 @@
 }
 
 .user-message {
-    background: linear-gradient(145deg, rgba(0,123,255,0.9) 0%, rgba(0,98,204,0.9) 100%);
-    border-right: 4px solid rgba(255,255,255,0.3);
-    color: white !important;
-    box-shadow: 2px 2px 8px rgba(0,123,255,0.2);
+    background-color: #007bff;
+    color: white;
     margin-bottom: 8px;
     margin-left: auto;
     position: relative;
@@ -116,120 +111,4 @@
 
 .dark-mode .thinking-text {
     color: #aaa;
-}
-
-/* 亮色模式强制黑色文字 */
-body:not(.dark-mode) .ai-message,
-body:not(.dark-mode) .ai-message *:not(code) {
-    color: #333 !important;
-}
-
-/* 暗色模式保持白色 */
-body.dark-mode .ai-message {
-    background: #444 !important;
-    background-image: none !important; /* 清除亮色模式渐变 */
-    color: #fff !important;
-}
-
-/* 保持亮色模式样式 */
-body:not(.dark-mode) .ai-message {
-    background: linear-gradient(145deg, #f8f9fa, #e9ecef);
-    color: #333 !important;
-}
-
-#message-input {
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}
-
-#message-input:focus {
-    border-color: rgba(0,123,255,0.3);
-    box-shadow: 0 0 12px rgba(0,123,255,0.1);
-}
-
-body.dark-mode #message-input:focus {
-    border-color: rgba(100,150,255,0.3);
-}
-
-.scroll-to-bottom-button {
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(4px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}
-
-body.dark-mode .scroll-to-bottom-button {
-    background: rgba(40,40,40,0.9);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-/* 代码块文字颜色 */
-.ai-message code {
-    color: #2d2d2d !important;
-}
-
-.ai-message p code {
-    color: #2d2d2d !important;
-    background-color: rgba(0,0,0,0.06);
-}
-
-body.dark-mode .ai-message code {
-    color: #d4d4d4 !important;
-}
-
-/* 消息容器布局优化 */
-.chat-messages .message-container {
-    width: 100%;
-    display: flex;
-    justify-content: var(--message-align); /* 通过变量控制对齐方向 */
-    padding: 6px 12px;
-}
-
-.chat-messages .user-container {
-    --message-align: flex-end;
-}
-
-.chat-messages .ai-container {
-    --message-align: flex-start;
-}
-
-/* 保持原有气泡样式 */
-.chat-messages .message {
-    max-width: 75%;
-    min-width: 120px;
-    position: relative;
-    transform: translateY(10px);
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                box-shadow 0.3s ease,
-                transform 0.3s ease;
-    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.1));
-    border: 1px solid rgba(255,255,255,0.3);
-    backdrop-filter: blur(8px);
-}
-
-.chat-messages .message.visible {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-/* 响应式优化 */
-@media (max-width: 768px) {
-    .chat-messages .message {
-        max-width: 90%;
-    }
-}
-
-/* 修复代码块溢出 */
-.chat-messages .message pre {
-    max-width: 100%;
-    overflow-x: auto;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-}
-
-/* 数学公式响应式 */
-.chat-messages .message .MathJax_Display {
-    max-width: 100%;
-    overflow-x: auto;
 } 

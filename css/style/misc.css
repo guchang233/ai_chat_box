@@ -37,17 +37,15 @@
     transition: opacity 0.3s ease, transform 0.2s ease;
     width: 36px;
     z-index: 10;
-    animation: float 3s ease-in-out infinite;
-    box-shadow: 0 8px 20px rgba(0,123,255,0.3);
 }
 
 .scroll-to-bottom-button:active {
-    transform: translateY(50%);
+    transform: translateY(0);
 }
 
 .scroll-to-bottom-button:hover {
     opacity: 1;
-    transform: translateY(10%);
+    transform: translateY(-2px);
 }
 
 .scroll-to-bottom-button svg {
@@ -82,34 +80,4 @@
 
 .stop-button:hover {
     background-color: #c82333;
-}
-
-.loading-spinner {
-    width: 24px;
-    height: 24px;
-    border: 3px solid rgba(0,123,255,0.2);
-    border-top-color: #007bff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-}
-
-/* 添加canvas背景样式 */
-#dynamic-bg {
-    position: fixed; /* 固定定位 */
-    top: 0; /* 顶部对齐 */
-    left: 0; /* 左侧对齐 */
-    width: 100%; /* 宽度100% */
-    height: 100%; /* 高度100% */
-    z-index: -1; /* 确保在其他内容下方 */
-    pointer-events: none; /* 禁用鼠标事件 */
 } 

@@ -54,6 +54,8 @@ body.dark-mode .modal-content input[type="text"]::placeholder {
 .chat-messages.dark-mode .ai-message {
     background-color: #444 !important;
     color: #fff !important;
+    font-size: 15px;
+    line-height: 1.6;
 }
 
 .user-message.dark-mode {

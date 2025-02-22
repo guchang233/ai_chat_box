@@ -22,8 +22,8 @@ function updateScrollButtonPosition() {
     const sendButtonRect = sendButton.getBoundingClientRect();
     const chatMessagesRect = chatMessages.getBoundingClientRect();
 
-    const buttonTop = sendButtonRect.top - chatMessagesRect.top - scrollToBottomButton.offsetHeight ;//////////
-    const buttonRight = chatMessagesRect.right - sendButtonRect.right ;////////
+    const buttonTop = sendButtonRect.top - chatMessagesRect.top - scrollToBottomButton.offsetHeight + 75;
+    const buttonRight = chatMessagesRect.right - sendButtonRect.right + 21;
 
     scrollToBottomButton.style.top = `${buttonTop}px`;
     scrollToBottomButton.style.right = `${buttonRight}px`;

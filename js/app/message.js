@@ -6,10 +6,6 @@ let editStartIndex = -1;
 const sendButton = document.getElementById('send-button');
 const stopButton = document.getElementById('stop-button');
 
-// 添加消息历史数组维护
-let messageHistory = [];
-const MAX_HISTORY = 10; // 保持最近10条对话
-
 function setupMessageSending() {
     const sendButton = document.getElementById('send-button');
     const messageInput = document.getElementById('message-input');
@@ -31,74 +27,166 @@ function toggleSendButtonState() {
 }
 
 async function sendMessage() {
-    const userInput = document.getElementById('message-input').value.trim();
-    if (!userInput) return;
-
-    const sendButton = document.getElementById('send-button');
-    sendButton.disabled = true;
-    let aiResponse = '';
+    if (!sendButton || !stopButton) return;
     
-    try {
-        // 添加用户消息到历史
-        messageHistory.push({ role: 'user', content: userInput });
-        addMessage('user', userInput);
-
-        // 显示加载状态
-        addMessage('assistant', '思考中...');
-
-        // 使用统一的API调用
-        await fetchAIResponse(userInput, (chunk) => {
-            aiResponse += chunk;
-            updateLastMessage(aiResponse);
-        });
-
-        // 添加AI回复到历史
-        messageHistory.push({ role: 'assistant', content: aiResponse });
-    } catch (error) {
-        console.error('请求失败:', error);
-        alert(`请求失败: ${error.message}`);
-    } finally {
-        sendButton.disabled = false;
-    }
-}
-
-function addMessage(sender, content, fileData = null) {
+    const messageInput = document.getElementById('message-input');
+    const attachButton = document.getElementById('attach-button');
+    const body = document.body;
     const chatMessages = document.getElementById('chat-messages');
+    let selectedFile = null;
+    const fileInput = document.getElementById('file-input');
+
+    const messageText = messageInput.value.trim();
+    if (!messageText && !selectedFile) {
+        return;
+    }
+    if (sendingMessage) return;
+    sendingMessage = true;
+
+    const message = messageInput.value.trim();
+    let fileData = null;
+    if (selectedFile) {
+        const fileDataObj = await readFileAsBase64(selectedFile, (progress) => {
+            uploadProgressBar.style.width = `${progress}%`;
+        });
+        fileData = fileDataObj.data;
+        console.log("fileData:", fileData);
+    }
+    messageInput.value = '';
+    toggleSendButtonState();
+
+    if (message) {
+        addMessage(message, 'user');
+    }
+    
+    const messageContainer = document.createElement('div');
+    messageContainer.className = 'ai-message-container';
+
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'loading-message';
+    loadingDiv.innerHTML = `
+        <div class="loading-spinner"></div>
+        <span class="thinking-text">思考中...</span>
+    `;
+    messageContainer.appendChild(loadingDiv);
+    chatMessages.appendChild(messageContainer);
+
     const messageDiv = document.createElement('div');
-    
-    // 保持原有消息容器结构
-    messageDiv.className = `message ${sender === 'user' ? 'user-message' : 'ai-message'}`;
-    
-    // 保持原有内容结构
-    const contentSpan = document.createElement('span');
-    contentSpan.style.fontSize = '14px';
-    
-    if (fileData) {
-        contentSpan.innerHTML = `<img src="data:image/png;base64,${fileData}" style="max-width:100%;border-radius:6px;">`;
-    } else {
-        contentSpan.innerHTML = sender === 'user' ? content : marked.parse(content);
+    messageDiv.className = 'ai-message';
+    if (body.classList.contains('dark-mode')) {
+        messageDiv.classList.add('dark-mode');
+    }
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'typing';
+    messageDiv.appendChild(contentDiv);
+
+    const stopController = new AbortController();
+
+    const abortHandler = () => {
+        stopController.abort();
+        toggleSendButtonState();
+        sendingMessage = false;
+        console.log('用户中止了请求');
+    };
+    stopButton.addEventListener('click', abortHandler);
+
+    try {
+        let currentText = '';
+        
+        messageContainer.removeChild(loadingDiv);
+        contentDiv.innerHTML = ''; // 清空初始内容
+        messageContainer.appendChild(messageDiv);
+        sendButton.style.display = 'none';
+        stopButton.style.display = 'block';
+
+        await fetchAIResponse(message, (chunk) => {
+            if (stopController.signal.aborted) return;
+            currentText += chunk;
+            contentDiv.innerHTML = marked.parse(currentText);
+            
+            // 实时更新AI回复
+            const aiMessage = session.messages.find(m => 
+                m.role === 'assistant' && 
+                m.content === currentText
+            );
+            if (!aiMessage) {
+                session.messages.push({ role: 'assistant', content: currentText });
+            } else {
+                aiMessage.content = currentText;
+            }
+
+            const codeBlocks = messageDiv.querySelectorAll('pre code');
+            codeBlocks.forEach(block => {
+                if (!block.classList.contains('hljs')) {
+                    hljs.highlightElement(block);
+                    
+                    const pre = block.parentElement;
+                    if (!pre.querySelector('.copy-button')) {
+                        const copyButton = document.createElement('button');
+                        copyButton.className = 'copy-button';
+                        copyButton.textContent = '复制';
+                        copyButton.onclick = async () => {
+                            await navigator.clipboard.writeText(block.textContent);
+                            copyButton.textContent = '已复制!';
+                            copyButton.classList.add('copied');
+                            setTimeout(() => {
+                                copyButton.textContent = '复制';
+                                copyButton.classList.remove('copied');
+                            }, 2000);
+                        };
+                        pre.appendChild(copyButton);
+                    }
+                }
+            });
+        }, fileData).finally(() => {
+            messageDiv.innerHTML = marked.parse(currentText);
+            const codeBlocks = messageDiv.querySelectorAll('pre code');
+            codeBlocks.forEach(block => {
+                if (!block.classList.contains('hljs')) {
+                    hljs.highlightElement(block);
+                    
+                    const pre = block.parentElement;
+                    if (!pre.querySelector('.copy-button')) {
+                        const copyButton = document.createElement('button');
+                        copyButton.className = 'copy-button';
+                        copyButton.textContent = '复制';
+                        copyButton.onclick = async () => {
+                            await navigator.clipboard.writeText(block.textContent);
+                            copyButton.textContent = '已复制!';
+                            copyButton.classList.add('copied');
+                            setTimeout(() => {
+                                copyButton.textContent = '复制';
+                                copyButton.classList.remove('copied');
+                            }, 2000);
+                        };
+                        pre.appendChild(copyButton);
+                    }
+                }
+            });
+            MathJax.typesetPromise().then(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            });
+        });
+    } catch (error) {
+        console.error("Error:", error);
+        messageDiv.innerHTML = '<div class="ai-content">出错了😟注意配置是否正确 , 不要频繁操作</div>';
+    } finally {
+        stopButton.removeEventListener('click', abortHandler);
+        sendButton.style.display = 'block';
+        stopButton.style.display = 'none';
+        sendButton.disabled = false;
+        sendingMessage = false;
+        if (contentDiv.childNodes.length > 0) {
+            const lastChild = contentDiv.childNodes[contentDiv.childNodes.length - 1];
+            if (lastChild.nodeType === Node.TEXT_NODE) {
+                lastChild.textContent = lastChild.textContent.slice(0, -1);
+            } else if (lastChild.nodeType === Node.ELEMENT_NODE && lastChild.lastChild && lastChild.lastChild.nodeType === Node.TEXT_NODE) {
+                lastChild.lastChild.textContent = lastChild.lastChild.textContent.slice(0, -1);
+            }
+        }
     }
 
-    // 保持原有按钮结构
-    if (sender === 'user') {
-        const editButton = document.createElement('button');
-        editButton.className = 'edit-button';
-        editButton.textContent = '编辑';
-        messageDiv.appendChild(editButton);
-    }
-
-    messageDiv.appendChild(contentSpan);
-    chatMessages.appendChild(messageDiv);
-
-    // 保持原有代码高亮逻辑
-    if (sender === 'ai') {
-        hljs.highlightAll();
-        MathJax.typesetPromise();
-    }
-
-    // 在消息创建后添加
-    messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
-    setTimeout(() => messageDiv.classList.add('visible'), 10);
+    window.sessionManager.persist();
 }
 
 function displayMessage(message) {
@@ -109,7 +197,7 @@ function displayMessage(message) {
     if (message.sender === 'ai') {
         messageContent = marked.parse(messageContent);
     }
-    messageDiv.innerHTML = `<div class="message-content">${messageContent}</div>`;
+    messageDiv.innerHTML = messageContent;
 
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -145,24 +233,4 @@ function safeClearContainer(containerId) {
     const clone = container.cloneNode(false); // 只克隆容器本身
     container.parentNode.replaceChild(clone, container);
     return clone; // 返回新容器以便重新初始化
-}
-
-// 清空历史时重置
-function clearChat() {
-    messageHistory = [];
-    // ... existing clear UI code ...
-}
-
-// 保持原有结构更新内容
-function updateLastMessage(newContent) {
-    const chatMessages = document.getElementById('chat-messages');
-    const lastMessage = chatMessages.lastElementChild;
-    if (lastMessage && lastMessage.classList.contains('ai-message')) {
-        const contentSpan = lastMessage.querySelector('span');
-        if (contentSpan) {
-            contentSpan.innerHTML = marked.parse(newContent);
-            hljs.highlightAll();
-            MathJax.typesetPromise();
-        }
-    }
 }

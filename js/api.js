@@ -17,7 +17,7 @@ async function fetchAIResponse(message, onChunk, fileData = null) {
 
     // 使用会话中已存储的消息（不重复添加新消息）
     const requestMessages = session.messages
-        .filter(m => ['user', 'assistant', 'system'].includes(m.role))
+        .filter(m => m.role !== 'system')
         .slice(-10); // 保留最后5轮对话
 
     if (message) requestMessages.push({ role: "user", content: message });
@@ -48,14 +48,11 @@ async function fetchAIResponse(message, onChunk, fileData = null) {
             headers: headers,
             body: body,
             signal: stopController.signal
-        }).catch(error => {
-            console.error('网络连接失败:', error);
-            throw new Error(`无法连接到API服务器，请检查：\n1. API地址是否正确\n2. 网络连接是否正常\n3. 是否启用HTTPS\n错误详情: ${error.message}`);
         });
 
-        if (!response.ok) {
-            const errorDetail = await response.json().catch(() => ({ error: '无法解析错误响应' }));
-            throw new Error(`API错误 ${response.status}: ${errorDetail.error || response.statusText}`);
+        if (!response.ok || !response.body) {
+            const errorText = await response.text();
+            throw new Error(`API错误: ${response.status} - ${errorText}`);
         }
 
         const reader = response.body.getReader();
@@ -66,14 +63,17 @@ async function fetchAIResponse(message, onChunk, fileData = null) {
             const { done, value } = await reader.read();
             if (done) break;
 
-            const chunk = decoder.decode(value, { stream: true });
+            const chunk = decoder.decode(value, { stream: true })
+                .replace(/\r/g, '')  // 移除回车符
+                .replace(/\]\}[\n\s]*\{/g, '},{') // 处理可能的分隔符
+                .trim();
+
             const lines = chunk.split('\n').filter(line => line.trim() !== '');
 
             for (const line of lines) {
                 if (line.startsWith('data: ') && line !== 'data: [DONE]') {
                     try {
-                        const jsonStr = line.slice(6).trim();
-                        if (!jsonStr) continue; // 添加空行检查
+                        const jsonStr = line.slice(6).replace(/(\r\n|\n|\r)/gm, "");
                         const data = JSON.parse(jsonStr);
                         const content = data.choices[0]?.delta?.content || '';
                         if (content) {
