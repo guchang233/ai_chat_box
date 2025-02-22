@@ -61,4 +61,17 @@ body.dark-mode .modal-content input[type="text"]::placeholder {
 .user-message.dark-mode {
     background-color: #007bff !important;
     color: #fff !important;
+}
+
+body.dark-mode .chat-messages::-webkit-scrollbar-thumb {
+    background-color: #555;
+}
+
+body.dark-mode .chat-messages::-webkit-scrollbar-thumb:hover {
+    background-color: #777;
+}
+
+/* Firefox 深色模式 */
+body.dark-mode .chat-messages {
+    scrollbar-color: #555 transparent !important;
 } 

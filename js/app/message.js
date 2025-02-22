@@ -2,6 +2,8 @@
 let sendingMessage = false;
 let editingMessage = false;
 let editStartIndex = -1;
+let renderTimeout;
+let isRendering = false;
 
 const sendButton = document.getElementById('send-button');
 const stopButton = document.getElementById('stop-button');
@@ -101,44 +103,46 @@ async function sendMessage() {
 
         await fetchAIResponse(message, (chunk) => {
             if (stopController.signal.aborted) return;
-            currentText += chunk;
-            contentDiv.innerHTML = marked.parse(currentText);
             
-            // 实时更新AI回复
-            const aiMessage = session.messages.find(m => 
-                m.role === 'assistant' && 
-                m.content === currentText
-            );
-            if (!aiMessage) {
-                session.messages.push({ role: 'assistant', content: currentText });
-            } else {
-                aiMessage.content = currentText;
-            }
-
-            const codeBlocks = messageDiv.querySelectorAll('pre code');
-            codeBlocks.forEach(block => {
-                if (!block.classList.contains('hljs')) {
-                    hljs.highlightElement(block);
+            currentText += chunk;
+            
+            // 使用微任务队列优化渲染时序
+            if (!isRendering) {
+                isRendering = true;
+                Promise.resolve().then(() => {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = marked.parse(currentText);
                     
-                    const pre = block.parentElement;
-                    if (!pre.querySelector('.copy-button')) {
-                        const copyButton = document.createElement('button');
-                        copyButton.className = 'copy-button';
-                        copyButton.textContent = '复制';
-                        copyButton.onclick = async () => {
-                            await navigator.clipboard.writeText(block.textContent);
-                            copyButton.textContent = '已复制!';
-                            copyButton.classList.add('copied');
-                            setTimeout(() => {
-                                copyButton.textContent = '复制';
-                                copyButton.classList.remove('copied');
-                            }, 2000);
-                        };
-                        pre.appendChild(copyButton);
+                    // 增量更新
+                    const newContent = tempDiv.innerHTML;
+                    if (newContent !== contentDiv.innerHTML) {
+                        contentDiv.innerHTML = newContent;
+                        
+                        // 即时滚动到底部
+                        const shouldScroll = chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 50;
+                        if (shouldScroll) {
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }
+                        
+                        // 异步处理代码高亮
+                        requestAnimationFrame(() => {
+                            const newCodeBlocks = contentDiv.querySelectorAll('pre code:not(.hljs)');
+                            newCodeBlocks.forEach(block => {
+                                hljs.highlightElement(block);
+                                if (!block.parentNode.querySelector('.copy-button')) {
+                                    const copyButton = createCopyButton(block);
+                                    block.parentNode.appendChild(copyButton);
+                                }
+                            });
+                        });
+                        
+                        // 延迟处理数学公式
+                        MathJax.typesetPromise().catch(console.warn);
                     }
-                }
-            });
-        }, fileData).finally(() => {
+                    isRendering = false;
+                });
+            }
+        }).finally(() => {
             messageDiv.innerHTML = marked.parse(currentText);
             const codeBlocks = messageDiv.querySelectorAll('pre code');
             codeBlocks.forEach(block => {
@@ -233,4 +237,47 @@ function safeClearContainer(containerId) {
     const clone = container.cloneNode(false); // 只克隆容器本身
     container.parentNode.replaceChild(clone, container);
     return clone; // 返回新容器以便重新初始化
+}
+
+function smoothScroll(container) {
+    const start = container.scrollTop;
+    const end = container.scrollHeight - container.clientHeight;
+    const duration = 300;
+    let startTime = null;
+
+    function animate(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = timestamp - startTime;
+        
+        // 缓动函数
+        const ease = (t) => t<.5 ? 2*t*t : -1+(4-2*t)*t;
+        const percentage = Math.min(progress / duration, 1);
+        
+        container.scrollTop = start + (end - start) * ease(percentage);
+        
+        if (progress < duration) {
+            requestAnimationFrame(animate);
+        }
+    }
+    
+    requestAnimationFrame(animate);
+}
+
+function createCopyButton(block) {
+    const copyButton = document.createElement('button');
+    copyButton.className = 'copy-button';
+    copyButton.textContent = '复制';
+    copyButton.onclick = async () => {
+        try {
+            await navigator.clipboard.writeText(block.textContent);
+            copyButton.textContent = '已复制!';
+            setTimeout(() => {
+                copyButton.textContent = '复制';
+            }, 2000);
+        } catch (err) {
+            console.error('复制失败:', err);
+            copyButton.textContent = '失败';
+        }
+    };
+    return copyButton;
 }

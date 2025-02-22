@@ -19,14 +19,46 @@
 
 /* 隐藏 chat-messages 的滚动条 */
 .chat-messages {
-    overflow: auto !important; /* 允许滚动 */
-    scrollbar-width: none !important; /* Firefox */
-    -ms-overflow-style: none !important; /* IE and Edge */
-    overflow-x: hidden !important; /* 禁用横向滚动 */
+    overflow: auto !important;
+    scrollbar-width: thin !important; /* Firefox 显示细滚动条 */
+    scrollbar-color: rgba(0,123,255,0.5) transparent !important; /* 半透明蓝色轨道 */
+    overflow-x: hidden !important;
+    scroll-behavior: smooth; /* 启用平滑滚动 */
 }
 
+/* Webkit浏览器滚动条样式 */
 .chat-messages::-webkit-scrollbar {
-    display: none !important; /* Chrome, Safari and Opera */
+    width: 8px !important;
+    background: transparent !important;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(0,123,255,0.5); /* 半透明蓝色 */
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background 0.3s ease;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,123,255,0.8); /* 悬停时更明显 */
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent !important;
+}
+
+/* 深色模式适配 */
+body.dark-mode .chat-messages {
+    scrollbar-color: rgba(255,255,255,0.2) transparent !important;
+}
+
+body.dark-mode .chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
+}
+
+body.dark-mode .chat-messages::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.3);
 }
 
 .chat-messages .message {
