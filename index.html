@@ -2,128 +2,86 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
-    <title>AI CHAT_BOX</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI智能助手</title>
     <link rel="stylesheet" href="css/style.css">
-    <!-- 高亮代码 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/emoji-js@1.0.0/lib/emoji.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- 添加MathJax支持 -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                enableMenu: false
+            },
+            startup: {
+                pageReady: function() {
+                    return MathJax.startup.defaultPageReady();
+                }
+            }
+        };
+    </script>
+    
+    <!-- 添加Font Awesome图标库，用于复制按钮 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <!-- 添加代码高亮库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <button id="move-button" style="background: none; border: none; cursor: pointer; padding: 0; margin-right: 5px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                </button>
-                <span class="version">v0.2.0</span>
-            </div>
-            <h1>AI CHAT_BOX</h1>
-            <button id="clear-chat-button">清空记录</button>
-            <a href="javascript:void(0);" id="settings-button" class="navigation-link">设置</a>
-        </div>
-        <div class="chat-messages" id="chat-messages">
-            <!-- 聊天消息将在这里动态添加 -->
-            <button id="scroll-to-bottom-button" class="scroll-to-bottom-button" style="display: none;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <polyline points="19 12 12 19 5 12"></polyline>
-                </svg>
-            </button>
-        </div>
-        <div class="down-input">
-            <div class="chat-input-area">
-                <div style="position: relative;">
-                    <div class="input-wrapper">
-                        <textarea id="message-input" placeholder="ctrl + enter发送..."></textarea>
-                    </div>
-                    <input type="file" id="file-input" style="display: none;">
-                    <div style="position: relative">
-                        <div class="button-container">
-                            <button id="send-button">➤</button>
-                            <button id="stop-button">■</button>
-                        </div>
-                    </div>
-                    <button id="attach-button">✚</button>
-                    <input type="file" id="file-input" style="display: none;" accept="image/*">
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 设置弹窗 -->
-    <div id="settings-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-button">&times;</span>
-            <h2>设置</h2>
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: none;">
-                <label>主题模式:</label>
-                <div class="theme-sliders">
-                    <input type="radio" name="theme" id="theme-default" value="default" checked>
-                    <label for="theme-default" class="theme-slider" style="background-color: #f0f0f0;"></label>
-                    <input type="radio" name="theme" id="theme-dark" value="dark">
-                    <label for="theme-dark" class="theme-slider" style="background-color: #2d2d2d;"></label>
-                </div>
-            </div>
-            
-            <div id="general-settings-panel" class="settings-panel active">
-                <label for="api-key-input">API Key:</label>
-                <input type="text" id="api-key-input" placeholder="请输入 API Key">
-                <label for="api-url-input">API URL:</label>
-                <input type="text" id="api-url-input" placeholder="请输入 API URL">
-                <label for="model-name-input">Model Name:</label>
-                <input type="text" id="model-name-input" placeholder="请输入 Model Name">
-            </div>
-            
-            <label for="preset-select">预设配置:</label>
-            <select id="preset-select" class="preset-select">
-                <option value="custom">自定义</option>
-                <option value="default">默认配置</option>
-                <option value="siliconflow">硅基流动</option>
-            </select>
-            
-            <button id="save-settings-button">保存</button>
-            <button id="copy-github-link-button"class="open-github">关于</button>
-        </div>
-    </div>
-    <script src="js/app/session.js"></script>
-    <script src="js/api.js" defer></script>
-    <script src="js/app/utils.js"></script>
-    <script src="js/app/file-upload.js"></script>
-    <script src="js/app/message.js"></script>
-    <script src="js/app/theme.js"></script>
-    <script src="js/app/scroll.js"></script>
-    <script src="js/app/settings.js"></script>
-    <script src="js/app/responsive.js"></script>
-    <script src="js/app/animation.js"></script>
-    <script src="js/app.js"></script>
-    <script>
-        function about() {
-            alert("has been open-sourced by ZerGc")
-        }
+    <div class="container">
+        <header>
+            <p>基于Gemini 2.0，支持文字对话与图像识别</p>
+        </header>
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const copyGitHubLinkButton = document.getElementById('copy-github-link-button');
-    
-            copyGitHubLinkButton.addEventListener('click', function() {
-                const githubLink = 'https://github.com/guchang233/ai_chat_box';
-                navigator.clipboard.writeText(githubLink).then(() => {
-                    alert('已复制 GitHub 链接!');
-                }).catch(err => {
-                    console.error('复制链接失败: ', err);
-                    alert('复制链接失败，请手动复制: ' + githubLink);
-                });
-            });
-        });
-    </script>
+        <div class="chat-container">
+            <!-- 在聊天界面顶部添加清除历史按钮 -->
+            <div class="chat-header">
+                <h2>AI聊天助手</h2>
+                <div class="header-buttons">
+                    <button id="stop-generate" title="停止生成" style="display: none;">
+                        <i class="fas fa-stop"></i> <span class="btn-text">停止生成</span>
+                    </button>
+                    <button id="clear-history" title="清除聊天历史">
+                        <i class="fas fa-trash"></i> <span class="btn-text">清除历史</span>
+                    </button>
+                </div>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="message ai-message">
+                    <div class="avatar">AI</div>
+                    <div class="message-content">
+                        <p>你好！我是AI助手，可以回答问题或分析上传的图片。请输入文字或上传图片与我交流。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <div class="image-preview-container" id="image-preview-container"></div>
+                <div class="input-group">
+                    <label for="image-upload" class="image-upload-label">
+                        <i class="fas fa-image"></i>
+                    </label>
+                    <input type="file" id="image-upload" accept="image/*" hidden>
+                    <textarea id="user-input" placeholder="输入您的问题..." rows="1"></textarea>
+                    <button id="send-button"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2024 | Created by Gu | Powered by Gemini 2.0</p>
+        </footer>
+    </div>
+
+    <script src="js/main.js"></script>
 </body>
 </html>
