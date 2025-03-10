@@ -1,0 +1,128 @@
+/* 调整按钮容器布局 */
+.chat-input-area {
+    position: relative;
+    display: flex;
+    gap: 8px;
+}
+
+#send-button, #stop-button {
+    /* 共享相同样式 */
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--primary-color);
+    color: white;
+    position: absolute;  /* 绝对定位实现重叠 */
+    right: 8px;          /* 与发送按钮相同位置 */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#stop-button {
+    align-items: center;
+    background: #ff4444;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    display: none;
+    font-size: 14px;
+    height: auto;
+    justify-content: center;
+    padding: 8px 16px;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+    z-index: 2;
+}
+
+#send-button {
+    position: relative;  /* 保持正常流 */
+    z-index: 1;
+}
+
+#stop-button:hover {
+    background: #cc0000;
+}
+
+.button-container {
+    position: relative;
+    width: 80px; /* 与按钮宽度一致 */
+    height: 36px; /* 与按钮高度一致 */
+    flex-shrink: 0; /* 防止压缩 */
+} 
+
+
+
+
+#stop-button:active {
+    background-color: #004085;
+}
+
+#stop-button:hover {
+    background-color: #0056b3;
+}
+
+/* 添加按钮微交互 */
+#send-button, #stop-button, #attach-button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#send-button:hover {
+    transform: scale(1.05) rotate(-15deg);
+    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+}
+
+#stop-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 8px rgba(255,68,68,0.4);
+}
+
+/* 暗色模式适配 */
+body.dark-mode #send-button, 
+body.dark-mode #stop-button {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* 清空聊天按钮和设置按钮 */
+button#clear-chat-button, 
+a#settings-button.navigation-link {
+    all: initial; /* 完全重置样式 */
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 8px !important;
+    color: white !important;
+    cursor: pointer;
+    font: inherit !important;
+    font-size: 14px !important;
+    padding: 6px 12px !important;
+    margin: 0 2px !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    box-sizing: border-box !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+}
+
+/* 悬停状态 */
+button#clear-chat-button:hover,
+a#settings-button.navigation-link:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* 暗色模式 */
+body.dark-mode button#clear-chat-button,
+body.dark-mode a#settings-button.navigation-link {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}

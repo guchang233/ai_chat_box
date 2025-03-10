@@ -1,0 +1,101 @@
+nav {
+    background-color: #007bff; /* 蓝色背景 */
+    color: white; /* 白色文字 */
+    padding: 12px; /* 添加内边距 */
+    border-radius: 20px; /* 更大的圆角 */
+    margin: 15px; /* 与页面边缘留出距离 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+    font-size: 14px; /* 减小导航栏字号 */
+    display: flex; /* 使用 Flexbox 布局 */
+    justify-content: space-between; /* 左右布局 */
+}
+
+/* 左侧导航项目 */
+.nav-left {
+    list-style: none; /* 清除列表样式 */
+    margin: 0; /* 清除外边距 */
+    padding: 0; /* 清除内边距 */
+    display: flex; /* 使用 Flexbox 布局 */
+    gap: 8px; /* 设置项目之间的间距 */
+    align-items: center; /* 垂直居中对齐 */
+}
+
+
+/* 所有导航链接的基础样式 */
+nav a {
+    color: white; /* 白色文字 */
+    text-decoration: none; /* 清除下划线 */
+    padding: 8px 16px; /* 设置内边距 */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
+    border-radius: 8px; /* 设置圆角 */
+    font-size: 14px; /* 设置字体大小 */
+}
+
+/* 导航链接悬停效果 */
+nav a:hover {
+    background-color: #0056b3; /* 悬停时背景颜色 */
+    transform: translateY(-2px); /* 悬停时向上移动 */
+}
+
+/* 导航链接点击效果 */
+nav a:active {
+    background-color: #004085; /* 点击时背景颜色 */
+    transform: translateY(0); /* 点击时取消移动 */
+}
+
+/* 版本号样式 */
+.version {
+    color: rgba(255, 255, 255, 0.8); /* 设置文字颜色 */
+    font-size: 12px; /* 设置字体大小 */
+    padding: 4px 8px; /* 设置内边距 */
+    background-color: rgba(255, 255, 255, 0.1); /* 设置背景颜色 */
+    border-radius: 4px; /* 设置圆角 */
+}
+
+/* GitHub链接样式 */
+.github-link {
+    color: white; /* 白色文字 */
+    text-decoration: none; /* 清除下划线 */
+    padding: 4px 8px !important; /* 设置内边距，覆盖默认样式 */
+    border-radius: 4px; /* 设置圆角 */
+    transition: background-color 0.3s ease; /* 添加过渡效果 */
+}
+
+.github-link:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* 悬停时背景颜色 */
+    transform: none !important; /* 悬停时取消移动，覆盖默认样式 */
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column; /* 小屏幕时垂直排列 */
+        gap: 10px; /* 设置项目之间的间距 */
+    }
+    
+    .nav-left, .nav-right {
+        justify-content: center; /* 小屏幕时居中对齐 */
+    }
+    .nav-right > li:not(.theme-toggle-container) {
+        display: none; /* 小屏幕时隐藏右侧导航项，除了主题切换按钮 */
+    }
+} 
+/* 设置按钮样式 */
+#settings-button {
+    color: white; /* 白色文字 */
+    text-decoration: none; /* 清除下划线 */
+    padding: 8px 16px; /* 设置内边距 */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* 添加过渡效果 */
+    border-radius: 8px; /* 设置圆角 */
+    font-size: 14px; /* 设置字体大小 */
+}
+
+#settings-button:hover {
+    background-color: #0056b3; /* 悬停时背景颜色 */
+    transform: translateY(-2px); /* 悬停时向上移动 */
+}
+
+#settings-button:active {
+    background-color: #004085; /* 点击时背景颜色 */
+    transform: translateY(0); /* 点击时取消移动 */
+} 
