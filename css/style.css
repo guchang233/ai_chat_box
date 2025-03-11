@@ -28,15 +28,6 @@ body {
     overflow-x: hidden;
 }
 
-.container {
-    max-width: 1200px;
-    min-height: 100vh;
-    margin: 0 auto;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-}
-
 /* 头部样式 */
 header {
     background-color: var(--primary-color);
@@ -56,66 +47,28 @@ header p {
     opacity: 0.9;
 }
 
+/* 修复聊天容器布局，实现固定底部输入框 */
+.container {
+    max-width: 1200px;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
 /* 聊天容器样式 */
 .chat-container {
     flex: 1;
-    display: flex;
-    flex-direction: column;
     background-color: var(--chat-bg);
     border-radius: 12px;
     box-shadow: var(--shadow);
     margin: 1rem;
     overflow: hidden;
-    border: 1px solid var(--border-color);
-}
-
-/* 聊天头部样式 */
-.chat-header {
+    border: 1.25px solid  #006eff36;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.8rem 1rem;
-    background-color: var(--chat-bg);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.chat-header h2 {
-    font-size: 1.2rem;
-    font-weight: 500;
-    color: var(--text-color);
-}
-
-#clear-history, #stop-generate {
-    background-color: transparent;
-    border: 1px solid #e74c3c;
-    color: #e74c3c;
-    padding: 0.3rem 0.6rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    transition: var(--transition);
-}
-
-#stop-generate {
-    border-color: #f39c12;
-    color: #f39c12;
-}
-
-#clear-history:hover {
-    background-color: #e74c3c;
-    color: white;
-}
-
-#stop-generate:hover {
-    background-color: #f39c12;
-    color: white;
-}
-
-@media (max-width: 768px) {
-    /* 在移动端隐藏按钮文本，只显示图标 */
-    #clear-history .btn-text, #stop-generate .btn-text {
-        display: none;
-    }
+    flex-direction: column;
+    height: calc(100vh - 2rem - 50px); /* 减去margin和footer高度 */
 }
 
 /* 聊天消息区域样式 */
@@ -128,90 +81,13 @@ header p {
     gap: 1rem;
 }
 
-/* 消息样式 */
-.message {
-    display: flex;
-    margin-bottom: 1rem;
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.user-message {
-    flex-direction: row-reverse;
-}
-
-.avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background-color: var(--primary-color);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 0.9rem;
-    flex-shrink: 0;
-}
-
-.user-message .avatar {
-    background-color: #10b981;
-}
-
-.message-content {
-    max-width: calc(100% - 50px);
-    padding: 0.8rem 1rem;
-    border-radius: 12px;
-    background-color: var(--ai-message-bg);
-    margin: 0 0.8rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    overflow-wrap: break-word;
-    word-break: break-word;
-    border: 1px solid var(--border-color);
-}
-
-.user-message .message-content {
-    background-color: var(--user-message-bg);
-}
-
-/* 消息头部样式 */
-.message-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 5px;
-    font-size: 12px;
-    color: var(--light-text);
-}
-
-.message-time {
-    margin-right: 10px;
-}
-
-.copy-button {
-    background: none;
-    border: none;
-    color: var(--light-text);
-    cursor: pointer;
-    padding: 2px 5px;
-    border-radius: 3px;
-    transition: var(--transition);
-}
-
-.copy-button:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-    color: var(--text-color);
-}
-
-/* 输入区域样式 */
+/* 固定输入容器在底部 */
 .chat-input-container {
+    position: relative;
     padding: 0.8rem;
     border-top: 1px solid var(--border-color);
     background-color: var(--chat-bg);
+    z-index: 10; /* 确保在最上层 */
 }
 
 .image-preview-container {
@@ -494,43 +370,12 @@ footer {
 
 /* 增强移动端响应式设计 */
 @media (max-width: 768px) {
-    .container {
-        padding: 10px;
+    .chat-container {
+        margin: 0.2rem;
     }
-    
-    header h1 {
-        font-size: 1.6rem;
+    footer {
+        display: none !important;
     }
-    
-    header p {
-        font-size: 0.9rem;
-    }
-    
-    .message-content {
-        max-width: 85%;
-        padding: 10px 12px;
-    }
-    
-    .avatar {
-        width: 36px;
-        height: 36px;
-        font-size: 0.9rem;
-    }
-    
-    .chat-messages {
-        padding: 15px;
-        max-height: 70vh;
-    }
-    
-    .input-group {
-        gap: 8px;
-    }
-    
-    #user-input {
-        padding: 10px 15px;
-        font-size: 0.95rem;
-    }
-    
     #send-button {
         width: 40px;
         height: 40px;
@@ -653,23 +498,23 @@ footer {
     }
 }
 
-/* 优化聊天界面滚动条 */
+/* 优化滚动条样式 (style.css)
+/* 优化滚动条 */
 .chat-messages::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
 }
 
 .chat-messages::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
 }
 
 .chat-messages::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+    background: rgba(0, 0, 0, 0.3);
 }
 
 /* 优化文本区域滚动条 */
@@ -746,4 +591,124 @@ footer {
     .input-group {
         background-color: #2a2a2a;
     }
+}
+/* 聊天头部样式 */
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    background-color: var(--chat-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.chat-header h2 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+#clear-history, #stop-generate {
+    background-color: transparent;
+    border: 1px solid #e74c3c;
+    color: #e74c3c;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: var(--transition);
+}
+
+#stop-generate {
+    border-color: #f39c12;
+    color: #f39c12;
+}
+
+#clear-history:hover {
+    background-color: #e74c3c;
+    color: white;
+}
+
+#stop-generate:hover {
+    background-color: #f39c12;
+    color: white;
+}
+
+/* 消息样式 */
+.message {
+    display: flex;
+    margin-bottom: 1rem;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.user-message {
+    flex-direction: row-reverse;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.user-message .avatar {
+    background-color: #10b981;
+}
+
+.message-content {
+    max-width: calc(100% - 50px);
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    background-color: var(--ai-message-bg);
+    margin: 0 0.8rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    overflow-wrap: break-word;
+    word-break: break-word;
+    border: 1px solid var(--border-color);
+}
+
+.user-message .message-content {
+    background-color: var(--user-message-bg);
+}
+
+/* 消息头部样式 */
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: var(--light-text);
+}
+
+.message-time {
+    margin-right: 10px;
+}
+
+.copy-button {
+    background: none;
+    border: none;
+    color: var(--light-text);
+    cursor: pointer;
+    padding: 2px 5px;
+    border-radius: 3px;
+    transition: var(--transition);
+}
+
+.copy-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--text-color);
 }

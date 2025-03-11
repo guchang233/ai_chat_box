@@ -14,10 +14,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // 修改为正确的API端点
     const API_ENDPOINT = `${API_URL}/v1/chat/completions`;
     
+    // 添加系统提示词
+    const SYSTEM_PROMPT = "你是一个由谷歌开发的AI助手Gemini，基于Gemini 2.0模型。你应该以友好、专业的方式回答用户的问题。如果用户上传了图片，请详细描述你看到的内容并回答相关问题。请用简洁、准确的语言回答，避免冗长的回复。当用户使用中文时，请用中文回答；当用户使用英文时，请用英文回答。如果你不确定答案，请诚实地表明你不知道，而不是提供可能不准确的信息。";
+    
     let selectedImages = [];
     let isProcessing = false;
+    let shouldStopGeneration = false;
+    let currentController = null;
     // 添加聊天历史记录数组，用于连续对话
     let chatHistory = [];
+    
+    // 初始化系统提示词
+    function initSystemPrompt() {
+        // 检查聊天历史是否为空或第一条不是系统提示
+        if (chatHistory.length === 0 || (chatHistory.length > 0 && chatHistory[0].role !== "system")) {
+            // 添加系统提示词到聊天历史的开头
+            chatHistory.unshift({
+                role: "system",
+                content: [{
+                    type: "text",
+                    text: SYSTEM_PROMPT
+                }]
+            });
+            console.log("系统提示词已添加到聊天历史");
+        }
+    }
     
     // 从本地存储加载聊天历史
     function loadChatHistory() {
@@ -27,6 +48,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (savedHistory) {
             try {
                 chatHistory = JSON.parse(savedHistory);
+                
+                // 确保系统提示词存在
+                initSystemPrompt();
                 
                 // 如果有保存的消息HTML，则恢复聊天界面
                 if (savedMessages) {
@@ -69,7 +93,11 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (e) {
                 console.error('加载聊天历史时出错:', e);
                 chatHistory = [];
+                initSystemPrompt();
             }
+        } else {
+            // 如果没有历史记录，初始化系统提示
+            initSystemPrompt();
         }
     }
     
@@ -168,43 +196,62 @@ document.addEventListener('DOMContentLoaded', function() {
     // 处理图片上传
     function handleImageUpload(e) {
         const files = e.target.files;
-        if (!files.length) return;
+        if (!files || files.length === 0) return;
         
-        const file = files[0];
-        if (!file.type.match('image.*')) {
-            alert('请上传图片文件');
-            return;
+        for (const file of files) {
+            if (!file.type.startsWith('image/')) continue;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const dataUrl = event.target.result;
+                
+                // 创建图片预览
+                const previewContainer = document.createElement('div');
+                previewContainer.className = 'image-preview';
+                
+                const img = document.createElement('img');
+                img.src = dataUrl;
+                img.alt = file.name;
+                
+                // 添加图片加载完成的类
+                img.onload = function() {
+                    this.classList.add('loaded');
+                };
+                
+                const removeButton = document.createElement('button');
+                removeButton.className = 'remove-image';
+                removeButton.innerHTML = '<i class="fas fa-times"></i>';
+                removeButton.addEventListener('click', function() {
+                    // 移除图片预览
+                    previewContainer.remove();
+                    // 从选中的图片数组中移除
+                    selectedImages = selectedImages.filter(image => image.dataUrl !== dataUrl);
+                });
+                
+                previewContainer.appendChild(img);
+                previewContainer.appendChild(removeButton);
+                imagePreviewContainer.appendChild(previewContainer);
+                
+                // 添加到选中的图片数组
+                selectedImages.push({
+                    dataUrl,
+                    name: file.name
+                });
+                
+                // 上传图片后自动在输入框填入提示文本
+                if (userInput.value.trim() === '') {
+                    userInput.value = "说说你看到了什么";
+                    // 触发input事件以调整文本框高度
+                    const event = new Event('input', { bubbles: true });
+                    userInput.dispatchEvent(event);
+                }
+            };
+            
+            reader.readAsDataURL(file);
         }
         
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const imagePreview = document.createElement('div');
-            imagePreview.className = 'image-preview';
-            
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            
-            const removeButton = document.createElement('button');
-            removeButton.className = 'remove-image';
-            removeButton.innerHTML = '<i class="fas fa-times"></i>';
-            removeButton.addEventListener('click', function() {
-                imagePreview.remove();
-                selectedImages = selectedImages.filter(image => image.dataUrl !== e.target.result);
-            });
-            
-            imagePreview.appendChild(img);
-            imagePreview.appendChild(removeButton);
-            imagePreviewContainer.appendChild(imagePreview);
-            
-            selectedImages.push({
-                dataUrl: e.target.result,
-                type: file.type,
-                name: file.name
-            });
-        };
-        
-        reader.readAsDataURL(file);
-        imageUpload.value = '';
+        // 清空文件输入，以便可以再次选择相同的文件
+        e.target.value = '';
     }
     
     // 发送消息
@@ -296,7 +343,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         messageContent.appendChild(messageHeader);
         
-        // 创建文本容器
+        // 添加文本容器
         const textDiv = document.createElement('div');
         textDiv.className = 'message-text';
         const markdownContent = document.createElement('div');
@@ -425,6 +472,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // 添加消息到聊天界面
+        // 在addMessage函数末尾添加
         function addMessage(role, text, images = [], time = '') {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${role}-message`;
@@ -470,27 +518,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 messageContent.appendChild(messageHeader);
             }
             
-            // 在addMessage函数中，修改渲染部分
-            // 添加文本内容
+            // 修改渲染部分
             if (text) {
                 const formattedText = formatMessage(text);
                 const textDiv = document.createElement('div');
-                textDiv.className = 'message-text';
+                textDiv.className = 'message-text markdown-content';
                 textDiv.innerHTML = formattedText;
                 messageContent.appendChild(textDiv);
-                
-                // 渲染LaTeX公式和代码高亮
-                setTimeout(() => {
-                    // 应用LaTeX渲染
+            
+                // 使用Promise链确保渲染顺序
+                Promise.resolve().then(() => {
                     renderLaTeX(textDiv);
-                    
-                    // 应用代码高亮
                     if (typeof hljs !== 'undefined') {
                         textDiv.querySelectorAll('pre.code-block').forEach((block) => {
                             hljs.highlightElement(block);
+                            // 添加行号
+                            const lines = block.textContent.split('\n').length - 1;
+                            block.innerHTML = `<span class="line-numbers">${Array(lines).fill('<span></span>').join('')}</span>${block.innerHTML}`;
                         });
                     }
-                }, 300); // 增加延迟时间，确保MathJax完全加载
+                }).catch(console.error);
             }
             
             // 添加图片
@@ -639,7 +686,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 恢复LaTeX公式，添加特殊标记以便后续渲染
             text = text.replace(/%%LATEX_BLOCK_(\d+)%%/g, function(match, index) {
                 const latex = latexBlocks[parseInt(index)];
-                return `<div class="math-block" data-latex="${encodeURIComponent(latex)}">${latex}</div>`;
+                return `<div class="math-block-container"><div class="math-block" data-latex="${encodeURIComponent(latex)}">${latex}</div></div>`;
             });
             
             text = text.replace(/%%LATEX_INLINE_(\d+)%%/g, function(match, index) {
@@ -654,30 +701,29 @@ document.addEventListener('DOMContentLoaded', function() {
         function renderLaTeX(element) {
             if (!element || typeof MathJax === 'undefined') return;
             
-            try {
-                // 延迟渲染，确保MathJax已完全加载
-                setTimeout(() => {
-                    // 检查MathJax版本和可用方法
-                    if (MathJax.typesetPromise) {
-                        MathJax.typesetPromise([element])
-                            .catch((err) => {
-                                console.error('MathJax渲染错误:', err);
-                                // 尝试使用备用方法重新渲染
-                                if (MathJax.typeset) {
-                                    MathJax.typeset([element]);
-                                }
-                            });
-                    } else if (MathJax.typeset) {
-                        MathJax.typeset([element]);
-                    } else if (MathJax.Hub && MathJax.Hub.Queue) {
-                        MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
-                    } else {
-                        console.warn('无法找到合适的MathJax渲染方法');
-                    }
-                }, 100);
-            } catch (err) {
-                console.error('MathJax执行错误:', err);
-            }
+            // 使用最新MathJax API
+            MathJax.typesetPromise([element]).then(() => {
+                element.querySelectorAll('.math-block-container').forEach(container => {
+                    container.style.opacity = '1';
+                    container.style.transform = 'translateY(0)';
+                });
+            }).catch(err => {
+                console.error('MathJax渲染失败:', err);
+                MathJax.typeset([element]); // 回退到同步渲染
+            });
+        }
+        
+        // 添加停止生成按钮事件
+        if (stopGenerateButton) {
+            stopGenerateButton.addEventListener('click', function() {
+                shouldStopGeneration = true;
+                if (currentController) {
+                    currentController.abort();
+                }
+                stopGenerateButton.style.display = 'none';
+                isProcessing = false;
+                sendButton.disabled = false;
+            });
         }
         
         // 添加清除历史按钮事件
@@ -685,7 +731,23 @@ document.addEventListener('DOMContentLoaded', function() {
             clearHistoryButton.addEventListener('click', function() {
                 if (confirm('确定要清除所有聊天历史吗？')) {
                     chatMessages.innerHTML = '';
+                    // 清除历史但保留系统提示
                     chatHistory = [];
+                    initSystemPrompt(); // 重新添加系统提示词
+                    
+                    // 添加欢迎消息
+                    const welcomeMessage = document.createElement('div');
+                    welcomeMessage.className = 'message ai-message';
+                    welcomeMessage.innerHTML = `
+                        <div class="avatar">AI</div>
+                        <div class="message-content">
+                            <p>你好！我是谷歌Gemini，可以回答问题或分析图片。欢迎与我交流。😄</p>
+                        </div>
+                    `;
+                    chatMessages.appendChild(welcomeMessage);
+                    
+                    // 保存到本地存储
+                    saveChatHistory();
                 }
             });
         }

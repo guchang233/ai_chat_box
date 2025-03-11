@@ -3,23 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI智能助手</title>
+    <title> Gu | Gemini Chat Platform</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 添加中文字体支持，包括更粗的字重 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <!-- 添加MathJax支持 -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- 修改MathJax配置 -->
     <script>
         window.MathJax = {
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']],
                 displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true
+                processEscapes: true,
+                tags: 'ams'  // 使用AMS风格的标签
             },
             options: {
                 enableMenu: false
+            },
+            chtml: {
+                scale: 1.05,  // 稍微放大公式
+                mtextInheritFont: true  // 文本继承周围的字体
+            },
+            svg: {
+                fontCache: 'global',
+                scale: 1.05
+            },
+            startup: {
+                pageReady: function() {
+                    return MathJax.startup.defaultPageReady();
+                }
+            }
+        };
+    </script>
+    <!-- 删除重复的MathJax配置块，只保留第二个更完整的配置 -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                tags: 'ams'
+            },
+            options: {
+                enableMenu: false
+            },
+            chtml: {
+                scale: 1.1,
+                mtextInheritFont: true,
+                matchFontHeight: false,
+                // Remove fontWeight property
+            },
+            svg: {
+                fontCache: 'global',
+                scale: 1.1,
+                matchFontHeight: false,
+                // Remove fontWeight property
             },
             startup: {
                 pageReady: function() {
@@ -38,14 +81,14 @@
 </head>
 <body>
     <div class="container">
-        <header>
+    <!--         <header>
             <p>基于Gemini 2.0，支持文字对话与图像识别</p>
         </header>
-
+-->
         <div class="chat-container">
             <!-- 在聊天界面顶部添加清除历史按钮 -->
             <div class="chat-header">
-                <h2>AI聊天助手</h2>
+                <h2>Gu | Gemini Chat Platform</h2>
                 <div class="header-buttons">
                     <button id="stop-generate" title="停止生成" style="display: none;">
                         <i class="fas fa-stop"></i> <span class="btn-text">停止生成</span>
@@ -59,7 +102,7 @@
                 <div class="message ai-message">
                     <div class="avatar">AI</div>
                     <div class="message-content">
-                        <p>你好！我是AI助手，可以回答问题或分析上传的图片。请输入文字或上传图片与我交流。</p>
+                        <p>你好！我是谷歌Gemini，可以回答问题或分析图片。欢迎与我交流。😄</p>
                     </div>
                 </div>
             </div>
