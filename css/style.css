@@ -348,6 +348,127 @@ footer {
     object-fit: contain;
 }
 
+/* 消息图片容器 */
+.message-images {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+}
+
+/* 图片包装器 */
+.image-wrapper {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--background-color);
+}
+
+/* 图片加载动画 */
+.message-images img {
+    width: 100%;
+    height: auto;
+    min-height: 100px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    object-fit: cover;
+    cursor: zoom-in;
+}
+
+.message-images img.loaded {
+    opacity: 1;
+}
+
+/* 全屏图片样式 */
+.fullscreen-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    cursor: zoom-out;
+}
+
+.fullscreen-image img {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 8px;
+}
+
+/* Markdown内容样式 */
+.markdown-content {
+    line-height: 1.5;
+}
+
+.markdown-content h1 {
+    font-size: 1.5em;
+    margin: 0.8em 0 0.5em;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.3em;
+}
+
+.markdown-content h2 {
+    font-size: 1.3em;
+    margin: 0.8em 0 0.5em;
+}
+
+.markdown-content h3 {
+    font-size: 1.1em;
+    margin: 0.8em 0 0.5em;
+}
+
+.markdown-content ul, .markdown-content
+
+/* 表格样式 */
+.markdown-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    overflow-x: auto;
+    display: block;
+}
+
+.markdown-table th, .markdown-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.markdown-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.markdown-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* 图片放大查看样式 */
+.fullscreen-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.fullscreen-image img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}
+
 /* 消息图片容器样式 */
 .message-images {
     display: flex;

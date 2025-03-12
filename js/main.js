@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const API_ENDPOINT = `${API_URL}/v1/chat/completions`;
     
     // 添加系统提示词
-    const SYSTEM_PROMPT = "你是一个由谷歌开发的AI助手Gemini，基于Gemini 2.0模型。你应该以友好、专业的方式回答用户的问题。如果用户上传了图片，请详细描述你看到的内容并回答相关问题。请用简洁、准确的语言回答，避免冗长的回复。当用户使用中文时，请用中文回答；当用户使用英文时，请用英文回答。如果你不确定答案，请诚实地表明你不知道，而不是提供可能不准确的信息。";
+    const SYSTEM_PROMPT = "你是一个由谷歌开发的AI助手Gemini，基于Gemini 2.0模型。你始终说中文。你应该以友好、专业的方式回答用户的问题。如果用户上传了图片，请详细描述你看到的内容并回答相关问题。请用简洁、准确的语言回答，避免冗长的回复。如果你不确定答案，请诚实地表明你不知道，而不是提供可能不准确的信息。";
     
     let selectedImages = [];
     let isProcessing = false;
@@ -472,7 +472,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // 添加消息到聊天界面
-        // 在addMessage函数末尾添加
         function addMessage(role, text, images = [], time = '') {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${role}-message`;
@@ -503,9 +502,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     copyButton.className = 'copy-button';
                     copyButton.innerHTML = '<i class="fas fa-copy"></i>';
                     copyButton.title = '复制内容';
+                    // 直接使用当前text参数而不是查找历史记录
                     copyButton.addEventListener('click', function() {
                         navigator.clipboard.writeText(text).then(() => {
-                            // 显示复制成功提示
                             copyButton.innerHTML = '<i class="fas fa-check"></i>';
                             setTimeout(() => {
                                 copyButton.innerHTML = '<i class="fas fa-copy"></i>';
@@ -546,20 +545,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 imagesContainer.className = 'message-images';
                 
                 for (const image of images) {
+                    const imgWrapper = document.createElement('div');
+                    imgWrapper.className = 'image-wrapper';
+                    
                     const img = document.createElement('img');
                     img.src = image.dataUrl;
                     img.alt = image.name || '上传的图片';
+                    
+                    // 添加加载状态处理
+                    img.onload = function() {
+                        this.classList.add('loaded');
+                        // 强制重排触发动画
+                        this.style.opacity = 0;
+                        requestAnimationFrame(() => {
+                            this.style.opacity = 1;
+                        });
+                    };
+                    
+                    // 点击事件绑定
                     img.addEventListener('click', function() {
-                        // 点击放大图片
                         const fullImg = document.createElement('div');
                         fullImg.className = 'fullscreen-image';
-                        fullImg.innerHTML = `<img src="${image.dataUrl}" alt="${image.name || '上传的图片'}">`;
-                        fullImg.addEventListener('click', function() {
-                            this.remove();
-                        });
+                        fullImg.innerHTML = `<img src="${this.src}" alt="${this.alt}">`;
+                        fullImg.addEventListener('click', () => fullImg.remove());
                         document.body.appendChild(fullImg);
                     });
-                    imagesContainer.appendChild(img);
+                    
+                    imgWrapper.appendChild(img);
+                    imagesContainer.appendChild(imgWrapper);
                 }
                 
                 messageContent.appendChild(imagesContainer);
