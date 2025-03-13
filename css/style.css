@@ -695,31 +695,31 @@ footer {
     transform: none; /* 移除缩放效果 */
     box-shadow: none; /* 移除阴影增强效果 */
 }
-/* 按钮包装器样式 */
+/* 修改按钮包装器样式 */
 .button-wrapper {
     position: relative;
     display: inline-block;
+    width: 40px;  /* 固定尺寸 */
+    height: 40px; /* 与按钮尺寸一致 */
 }
-/* 停止按钮样式 - 确保完全重合 */
+
+/* 停止按钮样式修正 */
 #stop-generate {
     position: absolute;
-    right: 0;
-    bottom: 0;
-    background-color: #ff4d4d;
-    border: none;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 100; /* 确保在发送按钮上层 */
-    
-    /* 确保与发送按钮尺寸完全一致 */
-    width: 40px;
-    height: 40px;
-    padding: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     margin: 0;
+    z-index: 100;
+}
+
+/* 发送按钮新增样式 */
+#send-button {
+    position: relative;
+    z-index: 50;
+    width: 100%;
+    height: 100%;
 }
 
 /* 确保输入组是相对定位的 */

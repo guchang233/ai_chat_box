@@ -31,25 +31,16 @@ class UIHandler {
         });
         
         // 停止生成按钮 - 优化点击反馈
+        // 在 initEventListeners 方法中修正
         this.stopGenerateButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
             if (window.chatManager) {
-                // 添加点击反馈动画
-                this.stopGenerateButton.classList.add('clicked');
-                
-                // 显示停止中状态
-                this.stopGenerateButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span class="btn-text">停止中...</span>';
-                
-                // 调用停止生成方法
+                // 移除动画逻辑
                 window.chatManager.stopGeneration();
-                
-                // 300ms后恢复按钮状态
-                setTimeout(() => {
-                    this.stopGenerateButton.classList.remove('clicked');
-                    this.hideStopButton();
-                }, 300);
-                
-                // 阻止事件冒泡
-                e.stopPropagation();
+                // 立即隐藏按钮
+                this.hideStopButton();
             }
         });
     }
@@ -133,36 +124,20 @@ class UIHandler {
     
     showStopButton(show) {
         if (show) {
-            // 获取发送按钮的样式
-            const sendButtonStyle = window.getComputedStyle(this.sendButton);
-            
-            // 复制发送按钮的关键样式属性
-            this.stopGenerateButton.style.width = sendButtonStyle.width;
-            this.stopGenerateButton.style.height = sendButtonStyle.height;
-            this.stopGenerateButton.style.borderRadius = sendButtonStyle.borderRadius;
-            
-            // 确保位置完全重合
-            this.stopGenerateButton.style.position = 'absolute';
-            this.stopGenerateButton.style.right = '0';
-            this.stopGenerateButton.style.bottom = '0';
-            
-            // 显示按钮
+            // 直接切换显示状态
             this.stopGenerateButton.style.display = 'flex';
+            this.sendButton.style.visibility = 'hidden'; // 隐藏发送按钮
+            // 移除尺寸设置逻辑
         } else {
             this.stopGenerateButton.style.display = 'none';
+            this.sendButton.style.visibility = 'visible'; // 恢复发送按钮
         }
     }
     
     hideStopButton() {
-        // 添加淡出动画
-        this.stopGenerateButton.classList.remove('fade-in');
-        this.stopGenerateButton.classList.add('fade-out');
-        
-        // 动画结束后隐藏按钮
-        this.stopButtonTimeout = setTimeout(() => {
-            this.stopGenerateButton.style.display = 'none';
-            this.stopButtonTimeout = null;
-        }, 300); // 与CSS动画时长匹配
+        // 简化隐藏逻辑
+        this.stopGenerateButton.style.display = 'none';
+        this.sendButton.style.visibility = 'visible';
     }
     
     disableSendButton(disable) {
