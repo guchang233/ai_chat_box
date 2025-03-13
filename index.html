@@ -12,65 +12,8 @@
     
     <!-- 添加MathJax支持 -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="js/mathjax-config.js"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <!-- 修改MathJax配置 -->
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true,
-                tags: 'ams'  // 使用AMS风格的标签
-            },
-            options: {
-                enableMenu: false
-            },
-            chtml: {
-                scale: 1.05,  // 稍微放大公式
-                mtextInheritFont: true  // 文本继承周围的字体
-            },
-            svg: {
-                fontCache: 'global',
-                scale: 1.05
-            },
-            startup: {
-                pageReady: function() {
-                    return MathJax.startup.defaultPageReady();
-                }
-            }
-        };
-    </script>
-    <script>
-        window.MathJax = {
-            // 保留第二个更完整的配置（第84-113行）
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                processEscapes: true,
-                tags: 'ams'
-            },
-            options: {
-                enableMenu: false
-            },
-            chtml: {
-                scale: 1.1,
-                mtextInheritFont: true,
-                matchFontHeight: false,
-                // Remove fontWeight property
-            },
-            svg: {
-                fontCache: 'global',
-                scale: 1.1,
-                matchFontHeight: false,
-                // Remove fontWeight property
-            },
-            startup: {
-                pageReady: function() {
-                    return MathJax.startup.defaultPageReady();
-                }
-            }
-        };
-    </script>
     
     <!-- 添加Font Awesome图标库，用于复制按钮 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -90,9 +33,6 @@
             <div class="chat-header">
                 <h2>Gu | Gemini Chat Platform</h2>
                 <div class="header-buttons">
-                    <button id="stop-generate" title="停止生成" style="display: none;">
-                        <i class="fas fa-stop"></i> <span class="btn-text">停止生成</span>
-                    </button>
                     <button id="clear-history" title="清除聊天历史">
                         <i class="fas fa-trash"></i> <span class="btn-text">清除历史</span>
                     </button>
@@ -115,7 +55,14 @@
                     </label>
                     <input type="file" id="image-upload" accept="image/*" hidden>
                     <textarea id="user-input" placeholder="输入您的问题..." rows="1"></textarea>
-                    <button id="send-button"><i class="fas fa-paper-plane"></i></button>
+                    
+                    <!-- 创建一个包装器来包含发送和停止按钮 -->
+                    <div class="button-wrapper">
+                        <button id="send-button"><i class="fas fa-paper-plane"></i></button>
+                        <button id="stop-generate" title="停止生成" style="display: none;">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -125,6 +72,12 @@
         </footer>
     </div>
 
+    <!-- 引入拆分后的JS文件 -->
+    <!-- 确保config.js最先加载 -->
+    <script src="js/config.js"></script>
+    <script src="js/message-formatter.js"></script>
+    <script src="js/ui-handler.js"></script>
+    <script src="js/chat-manager.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
