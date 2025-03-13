@@ -214,6 +214,15 @@ class ChatManager {
             this.currentController.abort();
             this.currentController = null;
             
+            // 添加停止生成的提示
+            const aiMessageElement = document.querySelector('.message.ai-message:last-child');
+            if (aiMessageElement) {
+                const stoppedIndicator = document.createElement('div');
+                stoppedIndicator.className = 'generation-stopped';
+                stoppedIndicator.textContent = '✓ 已停止生成';
+                aiMessageElement.querySelector('.message-content').appendChild(stoppedIndicator);
+            }
+            
             // 更新UI状态
             this.isProcessing = false;
             this.uiHandler.showStopButton(false);
@@ -443,17 +452,23 @@ class ChatManager {
             // 移除正在输入的提示
             document.querySelector('.typing-message')?.remove();
             
-            // 添加错误消息
-            const errorMessage = document.createElement('div');
-            errorMessage.className = 'message ai-message error-message';
-            errorMessage.innerHTML = `
-                <div class="avatar">AI</div>
-                <div class="message-content">
-                    <p>抱歉，发生了错误：${e.message}</p>
-                    <p>请检查网络连接或稍后再试。如果问题持续存在，可能需要检查API配置。</p>
-                </div>
-            `;
-            this.chatMessages.appendChild(errorMessage);
+            // 区分用户主动停止和实际错误
+            if (e.name === 'AbortError' || this.shouldStopGeneration) {
+                console.log('生成已被用户停止');
+                // 不添加错误消息，使用上面的停止提示
+            } else {
+                // 添加错误消息
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'message ai-message error-message';
+                errorMessage.innerHTML = `
+                    <div class="avatar">AI</div>
+                    <div class="message-content">
+                        <p>抱歉，发生了错误：${e.message}</p>
+                        <p>请检查网络连接或稍后再试。如果问题持续存在，可能需要检查API配置。</p>
+                    </div>
+                `;
+                this.chatMessages.appendChild(errorMessage);
+            }
         } finally {
             // 恢复UI状态
             this.isProcessing = false;

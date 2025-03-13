@@ -774,7 +774,7 @@ footer {
     100% { transform: rotate(360deg); }
 }
 
-/* 移动端隐藏头像
+/* 移动端适配 - 隐藏头像
 
 在移动设备上，为了节省空间并优化界面，我们可以隐藏聊天消息中的头像。下面是相关修改：
 
@@ -790,8 +790,31 @@ footer {
     .message .message-content {
         width: 100%;
         margin-left: 0;
+    }
+    
     /* 调整消息间距 */
     .chat-messages {
-        padding: 1px;
+        padding: 10px;
     }
-}}
+}
+
+/* 停止生成提示样式 */
+.generation-stopped {
+    font-style: italic;
+    color: #888;
+    padding: 4px 8px;
+    margin: 4px 0;
+    border-left: 3px solid #ff4d4d;
+    background-color: rgba(255, 77, 77, 0.05);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.85rem;
+    animation: fadeIn 0.3s ease;
+}
+
+/* 停止生成提示在暗色模式下的样式 */
+@media (prefers-color-scheme: dark) {
+    .generation-stopped {
+        color: #aaa;
+        background-color: rgba(255, 77, 77, 0.1);
+    }
+}
