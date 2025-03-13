@@ -129,4 +129,31 @@ class MessageFormatter {
             MathJax.typeset([element]); // 回退到同步渲染
         });
     }
+    
+    // 修改 formatMarkdown 方法
+    formatMarkdown(text) {
+        // 先处理 think 标签
+        const thinkBlocks = [];
+        text = text.replace(/<think>([\s\S]*?)<\/think>/g, (match, content) => {
+            const placeholder = `__THINK_${thinkBlocks.length}__`;
+            thinkBlocks.push(content);
+            return placeholder;
+        });
+    
+        // 处理其他 Markdown
+        let formatted = marked(text)
+            .replace(/<pre>/g, '<pre class="code-block">')
+            .replace(/<table>/g, '<table class="markdown-table">');
+    
+        // 还原 think 标签
+        formatted = formatted.replace(/__THINK_(\d+)__/g, (_, index) => {
+            const content = thinkBlocks[parseInt(index)];
+            return `<div class="think-block">
+                <div class="think-title"><i class="fas fa-brain"></i>推理过程</div>
+                ${this.formatMarkdown(content)}
+            </div>`;
+        });
+    
+        return formatted;
+    }
 }

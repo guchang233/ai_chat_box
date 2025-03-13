@@ -137,7 +137,7 @@ class ChatManager {
         welcomeMessage.innerHTML = `
             <div class="avatar">AI</div>
             <div class="message-content">
-                <p>你好！我是谷歌Gemini，可以回答问题或分析图片。欢迎与我交流。😄</p>
+                <p>你好！我是ai助手，可以回答问题或分析图片。欢迎与我交流。😄</p>
             </div>
         `;
         this.chatMessages.appendChild(welcomeMessage);
@@ -196,7 +196,7 @@ class ChatManager {
             welcomeMessage.innerHTML = `
                 <div class="avatar">AI</div>
                 <div class="message-content">
-                    <p>你好！我是谷歌Gemini，可以回答问题或分析图片。欢迎与我交流。😄</p>
+                    <p>你好！我是ai助手，可以回答问题或分析图片。欢迎与我交流。😄</p>
                 </div>
             `;
             this.chatMessages.appendChild(welcomeMessage);
@@ -306,39 +306,40 @@ class ChatManager {
             this.currentController = new AbortController();
             this.shouldStopGeneration = false;
             
+            // 获取最新的模型配置
+            const currentModel = CONFIG.MODEL;
+            const currentApiUrl = CONFIG.API_URL;
+            const currentApiKey = CONFIG.API_KEY;
+            
+            console.log(`使用模型: ${currentModel}, API: ${currentApiUrl}`);
+            
             // 准备API请求数据
+            // 在sendMessage方法中修改请求数据构造：
             const requestData = {
-                model: CONFIG.MODEL,
+                model: currentModel,
                 messages: this.chatHistory.map(msg => {
-                    // 系统消息特殊处理
                     if (msg.role === 'system') {
-                        return {
-                            role: 'system',
-                            content: msg.content[0].text
-                        };
+                        return { role: 'system', content: msg.content[0].text };
                     }
                     return msg;
                 }),
-                stream: true
+                stream: true,
+                // 添加模型专属参数
+                ...(CONFIG.AVAILABLE_MODELS.find(m => m.id === currentModel)?.parameters || {})
             };
             
-            console.log('发送请求到:', CONFIG.API_ENDPOINT);
-            
             // 发送API请求，添加错误处理和超时
-            // 修改请求头配置
+            // 修改请求头配置，使用当前的API密钥
             const headers = new Headers({
                 'Content-Type': 'application/json',
-                // 修正为Google API要求的认证头格式
-                'Authorization': `Bearer ${CONFIG.API_KEY}`
+                'Authorization': `Bearer ${currentApiKey}`
             });
             
-            // 添加调试日志
-            console.log('API Key:', CONFIG.API_KEY.substring(0, 6) + '****');
-            console.log('完整请求头:', headers);
+            console.log('发送请求到:', currentApiUrl);
             
-            const fetchPromise = fetch(CONFIG.API_ENDPOINT || `${CONFIG.API_URL}/v1/chat/completions`, {
+            const fetchPromise = fetch(currentApiUrl, {
                 method: 'POST',
-                headers: headers,  // 使用新的headers对象
+                headers: headers,
                 body: JSON.stringify(requestData),
                 signal: this.currentController.signal,
                 mode: 'cors'
@@ -381,6 +382,7 @@ class ChatManager {
             const reader = response.body.getReader();
             const decoder = new TextDecoder('utf-8');
             let responseText = '';
+            let buffer = ''; // 添加 buffer 声明
             
             // 添加复制按钮事件
             const copyButton = aiMessage.querySelector('.copy-button');
@@ -394,42 +396,63 @@ class ChatManager {
             });
             
             // 读取流式响应
+            // 在流式响应处理循环中
             while (true) {
                 const { done, value } = await reader.read();
                 if (done || this.shouldStopGeneration) break;
                 
                 const chunk = decoder.decode(value, { stream: true });
-                const lines = chunk.split('\n');
+                
+                // 分割数据行
+                const lines = chunk.split(/\r?\n/);
                 
                 for (const line of lines) {
-                    if (line.startsWith('data: ') && line !== 'data: [DONE]') {
-                        try {
-                            const data = JSON.parse(line.substring(6));
-                            if (data.choices && data.choices[0] && data.choices[0].delta && data.choices[0].delta.content) {
-                                const content = data.choices[0].delta.content;
-                                
-                                // 累加响应文本
-                                responseText += content;
-                                
-                                // 格式化并显示响应
-                                aiResponseElement.innerHTML = MessageFormatter.formatMessage(responseText);
-                                
-                                // 渲染LaTeX公式
-                                MessageFormatter.renderLaTeX(aiResponseElement);
-                                
-                                // 应用代码高亮
-                                if (window.hljs) {
-                                    aiResponseElement.querySelectorAll('pre.code-block').forEach(block => {
-                                        window.hljs.highlightElement(block);
-                                    });
-                                }
-                                
-                                // 滚动到底部
-                                this.uiHandler.scrollToBottom();
-                            }
-                        } catch (e) {
-                            console.error('解析流式响应时出错:', e);
+                    // 跳过空行或不是data开头的行
+                    if (!line.trim() || !line.startsWith('data: ')) continue;
+                    
+                    const jsonStr = line.substring(6).trim();
+                    // 跳过[DONE]标记
+                    if (jsonStr === '[DONE]') continue;
+                    
+                    try {
+                        const data = JSON.parse(jsonStr);
+                        
+                        // 检查是否有有效内容
+                        if (!data.choices || data.choices.length === 0 || 
+                            (!data.choices[0]?.delta?.content && !data.choices[0]?.delta?.reasoning_content)) {
+                            continue; // 跳过没有内容的数据块
                         }
+                        
+                        // 提取内容 - 优先使用reasoning_content
+                        const content = data.choices[0]?.delta?.reasoning_content || 
+                                        data.choices[0]?.delta?.content || '';
+                        
+                        if (content) {
+                            responseText += content;
+                            aiResponseElement.innerHTML = MessageFormatter.formatMessage(responseText);
+                            
+                            // 应用代码高亮
+                            if (window.hljs) {
+                                aiResponseElement.querySelectorAll('pre code').forEach(block => {
+                                    window.hljs.highlightElement(block);
+                                });
+                            }
+                            
+                            // 渲染LaTeX公式 - 确保MathJax已加载
+                            if (window.MathJax && window.MathJax.typeset) {
+                                try {
+                                    window.MathJax.typeset([aiResponseElement]);
+                                } catch (mathError) {
+                                    console.error('MathJax渲染错误:', mathError);
+                                }
+                            }
+                            
+                            // 滚动到底部
+                            this.uiHandler.scrollToBottom();
+                        }
+                    } catch (e) {
+                        console.error('解析流式响应时出错:', e, '原始数据:', line);
+                        // 错误时继续处理下一行
                     }
                 }
             }
@@ -589,5 +612,27 @@ class ChatManager {
         this.uiHandler.scrollToBottom();
         
         return messageDiv;
+    }
+    
+    // 添加更新系统提示中模型信息的方法
+    updateModelInSystemPrompt(modelName) {
+        // 查找系统提示消息
+        const systemPromptIndex = this.chatHistory.findIndex(msg => msg.role === 'system');
+        
+        if (systemPromptIndex !== -1) {
+            // 更新系统提示中的模型名称
+            let systemPrompt = this.chatHistory[systemPromptIndex].content[0].text;
+            
+            // 替换模型名称
+            systemPrompt = systemPrompt.replace(/基于.*模型/, `基于${modelName}模型`);
+            
+            // 更新系统提示
+            this.chatHistory[systemPromptIndex].content[0].text = systemPrompt;
+            
+            // 保存更新后的聊天历史
+            this.saveChatHistory();
+            
+            console.log('已更新系统提示中的模型信息:', modelName);
+        }
     }
 }

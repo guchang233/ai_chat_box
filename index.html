@@ -31,7 +31,14 @@
         <div class="chat-container">
             <!-- 在聊天界面顶部添加清除历史按钮 -->
             <div class="chat-header">
-                <h2>Gu | Gemini Chat Platform</h2>
+                <div class="header-left">
+                    <h2>Gu | Gemini Chat Platform</h2>
+                    <div class="model-selector">
+                        <select id="model-select" title="选择模型">
+                            <!-- 模型选项将通过JavaScript动态添加 -->
+                        </select>
+                    </div>
+                </div>
                 <div class="header-buttons">
                     <button id="clear-history" title="清除聊天历史">
                         <i class="fas fa-trash"></i> <span class="btn-text">清除历史</span>
@@ -42,7 +49,7 @@
                 <div class="message ai-message">
                     <div class="avatar">AI</div>
                     <div class="message-content">
-                        <p>你好！我是谷歌Gemini，可以回答问题或分析图片。欢迎与我交流。😄</p>
+                        <p>你好！我是ai助手，可以回答问题或分析图片。欢迎与我交流。😄</p>
                     </div>
                 </div>
             </div>
