@@ -396,7 +396,6 @@ class ChatManager {
             });
             
             // 读取流式响应
-            // 在流式响应处理循环中
             while (true) {
                 const { done, value } = await reader.read();
                 if (done || this.shouldStopGeneration) break;
@@ -418,10 +417,7 @@ class ChatManager {
                         const data = JSON.parse(jsonStr);
                         
                         // 检查是否有有效内容
-                        if (!data.choices || data.choices.length === 0 || 
-                            (!data.choices[0]?.delta?.content && !data.choices[0]?.delta?.reasoning_content)) {
-                            continue; // 跳过没有内容的数据块
-                        }
+                        if (!data.choices || data.choices.length === 0) continue;
                         
                         // 提取内容 - 优先使用reasoning_content
                         const content = data.choices[0]?.delta?.reasoning_content || 
@@ -432,11 +428,7 @@ class ChatManager {
                             aiResponseElement.innerHTML = MessageFormatter.formatMessage(responseText);
                             
                             // 应用代码高亮
-                            if (window.hljs) {
-                                aiResponseElement.querySelectorAll('pre code').forEach(block => {
-                                    window.hljs.highlightElement(block);
-                                });
-                            }
+                            if (window.hljs) window.hljs.highlightElement(block);
                             
                             // 渲染LaTeX公式 - 确保MathJax已加载
                             if (window.MathJax && window.MathJax.typeset) {
@@ -451,7 +443,7 @@ class ChatManager {
                             this.uiHandler.scrollToBottom();
                         }
                     } catch (e) {
-                        console.error('解析流式响应时出错:', e, '原始数据:', line);
+                        console.error('解析流式响应时出错:', e);
                         // 错误时继续处理下一行
                     }
                 }

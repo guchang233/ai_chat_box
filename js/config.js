@@ -62,10 +62,10 @@ const AVAILABLE_MODELS = [
         api_url: 'https://api.siliconflow.cn/v1/chat/completions',
         api_key: 'sk-lxmwbpakbgskicxtzoqaxbzdhubfpszjfvkyoosakfzntjjj',
         system_prompt: `今天是${currentDate}。你是由DeepSeek开发的AI助手，回答时请使用<think>标签展示思考过程。最终答案要简洁专业，使用中文回复。`,
-        // 新增参数
         parameters: {
             stream_options: {
-                include_usage: true
+                include_usage: true,
+                include_reasoning: true
             }
         }
     }
