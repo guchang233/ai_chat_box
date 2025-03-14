@@ -104,13 +104,11 @@ header p {
     border-radius: 4px;
     overflow: hidden;
 }
-
 .image-preview img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-
 .remove-image {
     position: absolute;
     top: 4px;
@@ -128,7 +126,6 @@ header p {
     font-size: 10px;
     padding: 0;
 }
-
 .input-group {
     display: flex;
     align-items: flex-end;
@@ -139,7 +136,6 @@ header p {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     border: 1px solid var(--border-color);
 }
-
 .image-upload-label {
     color: var(--light-text);
     cursor: pointer;
@@ -153,7 +149,6 @@ header p {
 .image-upload-label:hover {
     color: var(--primary-color);
 }
-
 #user-input {
     flex: 1;
     border: none;
@@ -165,7 +160,6 @@ header p {
     font-family: inherit;
     font-size: 0.95rem;
 }
-
 #send-button {
     background-color: var(--primary-color);
     color: white;
@@ -180,20 +174,17 @@ header p {
     transition: var(--transition);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 #send-button:hover {
     background-color: var(--secondary-color);
     transform: translateY(-2px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 #send-button:disabled {
     background-color: var(--border-color);
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
 }
-
 /* 打字指示器样式 */
 .typing-indicator {
     display: flex;
@@ -204,7 +195,6 @@ header p {
     margin-left: 12px;
     border: 1px solid var(--border-color);
 }
-
 .typing-indicator span {
     height: 8px;
     width: 8px;
@@ -214,20 +204,16 @@ header p {
     display: inline-block;
     animation: typing 1.4s infinite ease-in-out both;
 }
-
 .typing-indicator span:nth-child(1) {
     animation-delay: -0.32s;
 }
-
 .typing-indicator span:nth-child(2) {
     animation-delay: -0.16s;
 }
-
 @keyframes typing {
     0%, 80%, 100% { transform: scale(0.6); }
     40% { transform: scale(1); }
 }
-
 /* 页脚样式 */
 footer {
     text-align: center;
@@ -237,7 +223,6 @@ footer {
     background-color: var(--chat-bg);
     border-top: 1px solid var(--border-color);
 }
-
 /* 消息图片容器样式 */
 .message-images {
     display: flex;
@@ -245,7 +230,6 @@ footer {
     gap: 8px;
     margin-top: 8px;
 }
-
 .message-images img {
     max-width: 200px;
     max-height: 200px;
@@ -253,7 +237,6 @@ footer {
     cursor: pointer;
     transition: transform 0.2s;
 }
-
 .message-images img:hover {
     transform: scale(1.05);
 }
@@ -261,7 +244,6 @@ footer {
 #refresh-page {
     margin-left: 10px;
 }
-
 /* 在小屏幕上可能需要调整按钮的响应式布局 */
 @media (max-width: 600px) {
     #refresh-page .btn-text {
@@ -270,6 +252,9 @@ footer {
 }
 /* 增强移动端响应式设计 */
 @media (max-width: 768px) {
+    .header-left h2 {
+        display: none;
+    }
     .chat-container {
         margin: 0.2rem;
     }
@@ -332,120 +317,95 @@ footer {
         padding: 1px 3px;
     }
 }
-
 /* 针对超小屏幕的优化 */
 @media (max-width: 480px) {
     .container {
         padding: 5px;
     }
-    
     header {
         margin-bottom: 15px;
         padding: 15px 0;
     }
-    
     header h1 {
         font-size: 1.4rem;
     }
-    
     .message {
         margin-bottom: 15px;
     }
-    
     .message-content {
         max-width: 90%;
         padding: 8px 10px;
     }
-    
     .avatar {
         width: 32px;
         height: 32px;
         margin-right: 8px;
     }
-    
     .user-message .avatar {
         margin-left: 8px;
     }
-    
     .chat-input-container {
         padding: 10px;
     }
-    
     .image-preview-container {
         gap: 6px;
         margin-bottom: 6px;
     }
-    
     .image-preview {
         width: 70px;
         height: 70px;
     }
-    
     .message-images img {
         max-width: 120px;
         max-height: 120px;
     }
-    
     /* 优化代码块在小屏幕上的显示 */
     .markdown-content pre.code-block {
         padding: 8px;
         font-size: 0.8em;
     }
-    
     /* 优化LaTeX公式在小屏幕上的显示 */
     .math-block {
         font-size: 0.9em;
     }
 }
-
-/* 优化滚动条样式 (style.css)
-/* 优化滚动条 */
+/* 优化滚动条样式 (style.css)/* 优化滚动条 */
 .chat-messages::-webkit-scrollbar {
     width: 8px;
 }
-
 .chat-messages::-webkit-scrollbar-track {
     background: rgba(0, 0, 0, 0.05);
 }
-
 .chat-messages::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.2);
     border-radius: 4px;
 }
-
 .chat-messages::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.3);
 }
-
 /* 优化文本区域滚动条 */
 #user-input::-webkit-scrollbar {
     width: 6px;
 }
-
 #user-input::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 10px;
 }
-
 #user-input::-webkit-scrollbar-thumb {
     background: #c1c1c1;
     border-radius: 10px;
 }
-
 #user-input::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
 }
-
 /* 优化图片加载时的过渡效果 */
 .message-images img, .image-preview img {
     transition: opacity 0.3s ease;
     opacity: 0;
 }
-
 .message-images img.loaded, .image-preview img.loaded {
     opacity: 1;
 }
-
 /* 添加暗色模式支持 */
 @media (prefers-color-scheme: dark) {
     :root {
@@ -459,114 +419,203 @@ footer {
         --light-text: #a0a0a0;
         --border-color: #333333;
     }
-    
     .markdown-content code {
         background-color: #2a2a2a;
     }
-    
     .markdown-content pre.code-block {
         background-color: #2a2a2a;
     }
-    
     .markdown-table th {
         background-color: #333333;
     }
-    
     .markdown-table tr:nth-child(even) {
         background-color: #2a2a2a;
     }
-    
     .markdown-table th, .markdown-table td {
         border-color: #444444;
     }
-    
     .copy-button:hover {
         background-color: rgba(255, 255, 255, 0.1);
     }
-    
     #user-input {
         color: var(--text-color);
     }
-    
     .input-group {
         background-color: #2a2a2a;
     }
 }
 /* 聊天头部样式优化 */
+/* 优化 header 布局 */
 .chat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.8rem 1rem;
-    background-color: var(--chat-bg);
-    border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-left h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  white-space: nowrap;
+}
+
+.model-selector {
+  margin-left: 10px;
+}
+
+.header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 响应式设计 - 优化手机端 header */
+@media (max-width: 768px) {
+  .chat-header {
+    padding: 6px 8px;
+    flex-direction: row;
+  }
+  
+  .header-left {
+    gap: 5px;
+  }
+  
+  .header-left h2 {
+    font-size: 0;
+    width: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .model-selector {
+    margin-left: 0;
+  }
+  
+  #model-select {
+    padding: 4px 20px 4px 6px;
+    font-size: 0.75rem;
+    max-width: 100px;
+    background-position: right 5px center;
+  }
+  
+  .header-buttons {
+    gap: 5px;
+  }
+  
+  .related-sites a,
+  .header-buttons button {
+    padding: 4px 6px;
+    font-size: 0.75rem;
+  }
+  
+  .related-sites a .btn-text,
+  .header-buttons button .btn-text {
+    display: none;
+  }
+  
+  .related-sites {
+    margin-right: 5px;
+    gap: 5px;
+  }
+  
+  #refresh-page, #clear-history {
+    min-width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: center;
+  }
+  
+  #refresh-page i, #clear-history i {
+    font-size: 0.8rem;
+  }
 }
 
-.chat-header h2 {
-    font-size: 1.2rem;
-    font-weight: 500;
-    color: var(--text-color);
-    margin: 0;
+/* 超小屏幕进一步优化 */
+@media (max-width: 480px) {
+  .chat-header {
+    padding: 4px 6px;
+  }
+  
+  #model-select {
+    max-width: 80px;
+    font-size: 0.7rem;
+  }
+  
+  .related-sites a,
+  .header-buttons button {
+    padding: 3px 5px;
+  }
+  
+  .related-sites {
+    gap: 3px;
+  }
+}
+.related-sites {
+    display: flex;
+    gap: 8px;
 }
 
-/* 模型选择器样式 */
-.model-selector {
-    position: relative;
-}
-
-#model-select {
-    padding: 5px 28px 5px 10px;
+.related-sites a {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    background-color: #f5f5f5;
     border-radius: 6px;
-    border: 1px solid var(--border-color);
-    background-color: var(--chat-bg);
-    color: var(--primary-color);
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
     transition: all 0.2s ease;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%233a86ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-#model-select:hover {
-    border-color: var(--primary-color);
-    box-shadow: 0 1px 4px rgba(58, 134, 255, 0.2);
+.related-sites a:hover {
+    background-color: #e0e0e0;
 }
 
-#model-select:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(58, 134, 255, 0.15);
+.related-sites a i {
+    margin-right: 5px;
 }
 
-/* 移动端适配 */
+/* 响应式设计 */
 @media (max-width: 768px) {
-    .header-left {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-    }
-    
-    .chat-header h2 {
+}
+
+/* 中等屏幕响应式调整 */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .related-sites a .btn-text,
+    .header-buttons button .btn-text {
         display: none;
     }
     
-    #model-select {
-        font-size: 0.8rem;
-        padding: 4px 24px 4px 8px;
+    .related-sites a,
+    .header-buttons button {
+        padding: 6px 8px;
     }
 }
 
+/* 暗色模式适配 */
+@media (prefers-color-scheme: dark) {
+    .chat-header {
+        border-bottom-color: #333;
+    }
+    
+    .related-sites a {
+        background-color: #2a2a2a;
+        color: #e0e0e0;
+    }
+    
+    .related-sites a:hover {
+        background-color: #3a3a3a;
+    }
+}
 #clear-history, #stop-generate  {
     background-color: transparent;
     border: 1px solid #e74c3c;
@@ -852,11 +901,8 @@ footer {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-
 /* 移动端适配 - 隐藏头像
-
 在移动设备上，为了节省空间并优化界面，我们可以隐藏聊天消息中的头像。下面是相关修改：
-
 ## 添加媒体查询样式
 ```css
 /* 移动端适配 - 隐藏头像 */
@@ -864,19 +910,16 @@ footer {
     .message .avatar {
         display: none;
     }
-    
     /* 调整消息内容宽度 */
     .message .message-content {
         width: 100%;
         margin-left: 0;
     }
-    
     /* 调整消息间距 */
     .chat-messages {
         padding: 10px;
     }
 }
-
 /* 停止生成提示样式 */
 .generation-stopped {
     font-style: italic;
@@ -889,13 +932,11 @@ footer {
     font-size: 0.85rem;
     animation: fadeIn 0.3s ease;
 }
-
 /* 模型选择器样式 */
 .model-selector {
     margin-right: 10px;
     position: relative;
 }
-
 #model-select {
     padding: 6px 30px 6px 12px;
     border-radius: 6px;
@@ -911,25 +952,21 @@ footer {
     background-position: right 10px center;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
-
 #model-select:hover {
     border-color: var(--primary-color);
     box-shadow: 0 1px 4px rgba(58, 134, 255, 0.2);
 }
-
 #model-select:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 2px rgba(58, 134, 255, 0.2);
 }
-
 /* 模型选择器选项样式 */
 #model-select option {
     padding: 8px;
     background-color: var(--chat-bg);
     color: var(--text-color);
 }
-
 /* 模型切换通知 */
 .model-change-notification {
     position: fixed;
@@ -947,21 +984,17 @@ footer {
     display: flex;
     align-items: center;
 }
-
 .model-change-notification i {
     margin-right: 8px;
 }
-
 .model-change-notification.fade-out {
     animation: fadeOut 0.5s ease forwards;
 }
-
 /* 移动端适配 */
 @media (max-width: 768px) {
     .model-selector {
         margin-right: 8px;
     }
-    
     #model-select {
         padding: 5px 25px 5px 8px;
         font-size: 0.8rem;
@@ -990,28 +1023,70 @@ footer {
   background-color: rgba(0, 0, 0, 0.02);
   border-radius: 6px;
 }
-
 .latex-display-inner {
   display: flex;
   justify-content: center;
   min-width: min-content;
 }
-
 .latex-display-inner .MathJax {
   font-style: italic !important;
   max-width: 100%;
 }
-
 /* 确保在小屏幕上也能正常显示 */
 @media (max-width: 768px) {
   .latex-display-container {
     font-size: 0.9em;
   }
 }
-
 /* 暗色模式下的样式 */
 @media (prefers-color-scheme: dark) {
   .latex-display-container {
     background-color: rgba(255, 255, 255, 0.03);
   }
+}
+/* 关联网站链接样式 */
+.related-sites {
+    display: flex;
+    gap: 10px;
+    margin-right: 15px;
+}
+.related-sites a {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+.related-sites a:hover {
+    background-color: #e0e0e0;
+}
+.related-sites a i {
+    margin-right: 5px;
+}
+/* 响应式设计 - 在小屏幕上隐藏文字只显示图标 */
+@media (max-width: 768px) {
+    .related-sites a .btn-text {
+        display: none;
+    }
+    .related-sites a {
+        padding: 6px 8px;
+    }
+    .related-sites {
+        margin-right: 10px;
+    }
+}
+/* 暗色模式适配 */
+@media (prefers-color-scheme: dark) {
+    .related-sites a {
+        background-color: #2a2a2a;
+        color: #e0e0e0;
+    }
+    
+    .related-sites a:hover {
+        background-color: #3a3a3a;
+    }
 }
