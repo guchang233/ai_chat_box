@@ -1,9 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // 初始化MathJax配置
-    if (window.MathJax) {
-        window.MathJax.startup.document.state(0);
-        window.MathJax.startup.document.clear();
-        window.MathJax.startup.document.updateDocument();
+    // 初始化MathJax配置 - 修复错误
+    if (window.MathJax && window.MathJax.startup && window.MathJax.startup.document) {
+        try {
+            window.MathJax.startup.document.state(0);
+            window.MathJax.startup.document.clear();
+            window.MathJax.startup.document.updateDocument();
+        } catch (error) {
+            console.warn('MathJax 初始化时出错:', error);
+        }
     }
     
     // 检查API配置
@@ -14,6 +18,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 初始化模型选择器
     initModelSelector();
+    
+    // 添加重连按钮的事件监听器
+    const refreshButton = document.getElementById('refresh-page');
+    if (refreshButton) {
+        refreshButton.addEventListener('click', function() {
+            // 显示确认对话框
+            if (confirm('确定要重新连接吗？这将刷新页面并重新建立连接。')) {
+                // 刷新页面
+                window.location.reload();
+            }
+        });
+    }
     
     // 检查网络连接
     function checkNetworkConnection() {
@@ -34,6 +50,14 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('网络已断开');
         document.querySelector('.chat-input-container').classList.add('offline');
         alert('网络连接已断开，聊天功能可能无法正常使用。');
+        // 添加重连按钮的事件监听器
+        document.getElementById('refresh-page').addEventListener('click', function() {
+            // 显示确认对话框
+            if (confirm('确定要重新连接吗？这将刷新页面并重新建立连接。')) {
+                // 刷新页面
+                window.location.reload();
+            }
+        });
     });
     
     // 初始检查网络

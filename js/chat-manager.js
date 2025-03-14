@@ -426,10 +426,7 @@ class ChatManager {
                         if (content) {
                             responseText += content;
                             aiResponseElement.innerHTML = MessageFormatter.formatMessage(responseText);
-                            
-                            // 应用代码高亮
-                            if (window.hljs) window.hljs.highlightElement(block);
-                            
+
                             // 渲染LaTeX公式 - 确保MathJax已加载
                             if (window.MathJax && window.MathJax.typeset) {
                                 try {
@@ -591,13 +588,7 @@ class ChatManager {
         // 渲染LaTeX公式
         if (role === 'assistant' && text) {
             MessageFormatter.renderLaTeX(messageDiv.querySelector('.markdown-content'));
-            
-            // 应用代码高亮
-            if (window.hljs) {
-                messageDiv.querySelectorAll('pre.code-block').forEach(block => {
-                    window.hljs.highlightElement(block);
-                });
-            }
+   
         }
         
         // 滚动到底部

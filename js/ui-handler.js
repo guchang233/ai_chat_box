@@ -155,3 +155,16 @@ class UIHandler {
         this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
     }
 }
+
+// 查找可能使用了未定义block变量的代码
+// 例如在处理代码高亮或Markdown渲染的函数中
+
+// 可能的修复方式
+function highlightCode(element) {
+    const codeBlocks = element.querySelectorAll('pre code');
+    codeBlocks.forEach(block => {
+        if (window.hljs) {
+            window.hljs.highlightElement(block);
+        }
+    });
+}

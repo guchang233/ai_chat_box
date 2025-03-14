@@ -257,7 +257,17 @@ footer {
 .message-images img:hover {
     transform: scale(1.05);
 }
+/* 确保重连按钮与清除历史按钮样式一致 */
+#refresh-page {
+    margin-left: 10px;
+}
 
+/* 在小屏幕上可能需要调整按钮的响应式布局 */
+@media (max-width: 600px) {
+    #refresh-page .btn-text {
+        display: none;
+    }
+}
 /* 增强移动端响应式设计 */
 @media (max-width: 768px) {
     .chat-container {
@@ -555,7 +565,7 @@ footer {
     }
     
     .chat-header h2 {
-        font-size: 1rem;
+        display: none;
     }
     
     #model-select {
@@ -564,7 +574,7 @@ footer {
     }
 }
 
-#clear-history, #stop-generate {
+#clear-history, #stop-generate  {
     background-color: transparent;
     border: 1px solid #e74c3c;
     color: #e74c3c;
@@ -574,7 +584,17 @@ footer {
     font-size: 0.8rem;
     transition: var(--transition);
 }
-
+#refresh-page {
+    background-color: transparent;
+    border: 1px solid #0044ff;
+    color: #0044ff;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: var(--transition);
+}
+    
 #stop-generate {
     border-color: #f39c12;
     color: #f39c12;

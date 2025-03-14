@@ -157,3 +157,23 @@ class MessageFormatter {
         return formatted;
     }
 }
+
+
+// 查找类似这样的代码段
+function formatCodeBlock(language, content) {
+    const codeElement = document.createElement('pre');
+    codeElement.className = 'code-block';
+    
+    // 这里可能是问题所在，block变量未定义就被使用
+    // codeElement.appendChild(block);
+    
+    // 修复方法：先定义block变量
+    const block = document.createElement('code');
+    if (language) {
+        block.className = language;
+    }
+    block.textContent = content;
+    codeElement.appendChild(block);
+    
+    return codeElement;
+}
