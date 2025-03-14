@@ -1,10 +1,21 @@
+// 修复 MathJax 初始化错误
+// 在文档加载完成后的事件处理中添加 MathJax 重新渲染
 document.addEventListener('DOMContentLoaded', function() {
-    // 初始化MathJax配置 - 修复错误
-    if (window.MathJax && window.MathJax.startup && window.MathJax.startup.document) {
+    // 安全地初始化 MathJax
+    if (window.MathJax) {
         try {
-            window.MathJax.startup.document.state(0);
-            window.MathJax.startup.document.clear();
-            window.MathJax.startup.document.updateDocument();
+            // 等待 MathJax 完全加载
+            function initMathJax() {
+                if (window.MathJax.startup && window.MathJax.startup.document) {
+                    window.MathJax.startup.document.clear();
+                    window.MathJax.startup.document.updateDocument();
+                } else {
+                    setTimeout(initMathJax, 100);
+                }
+            }
+            
+            // 延迟初始化
+            setTimeout(initMathJax, 500);
         } catch (error) {
             console.warn('MathJax 初始化时出错:', error);
         }
@@ -142,5 +153,16 @@ document.addEventListener('DOMContentLoaded', function() {
             notification.classList.add('fade-out');
             setTimeout(() => notification.remove(), 500);
         }, 2000);
+    }
+    
+    // 确保 MathJax 在页面加载完成后重新渲染
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.startup.promise.then(() => {
+            setTimeout(() => {
+                window.MathJax.typesetPromise()
+                    .then(() => console.log('初始 MathJax 渲染完成'))
+                    .catch(err => console.warn('MathJax 渲染错误:', err));
+            }, 500);
+        });
     }
 });

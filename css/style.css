@@ -549,13 +549,6 @@ footer {
     box-shadow: 0 0 0 2px rgba(58, 134, 255, 0.15);
 }
 
-/* 暗色模式下的模型选择器 */
-@media (prefers-color-scheme: dark) {
-    #model-select {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%233a86ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    }
-}
-
 /* 移动端适配 */
 @media (max-width: 768px) {
     .header-left {
@@ -897,13 +890,6 @@ footer {
     animation: fadeIn 0.3s ease;
 }
 
-/* 停止生成提示在暗色模式下的样式 */
-@media (prefers-color-scheme: dark) {
-    .generation-stopped {
-        color: #aaa;
-        background-color: rgba(255, 77, 77, 0.1);
-    }
-}
 /* 模型选择器样式 */
 .model-selector {
     margin-right: 10px;
@@ -942,17 +928,6 @@ footer {
     padding: 8px;
     background-color: var(--chat-bg);
     color: var(--text-color);
-}
-
-/* 暗色模式下的模型选择器 */
-@media (prefers-color-scheme: dark) {
-    #model-select {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a0a0a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    }
-    
-    #model-select option {
-        background-color: #2a2a2a;
-    }
 }
 
 /* 模型切换通知 */
@@ -995,4 +970,48 @@ footer {
         overflow: hidden;
         text-overflow: ellipsis;
     }
+}
+/* 数学公式样式优化 */
+.MathJax {
+    font-style: italic !important;
+  }
+   /* 确保公式在移动设备上也能正常显示 */
+  @media (max-width: 768px) {
+    .MathJax {
+      font-size: 0.9em;
+    }
+  }
+  /* LaTeX 公式容器样式 */
+.latex-display-container {
+  width: 100%;
+  overflow-x: auto;
+  margin: 1em 0;
+  padding: 0.5em 0;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 6px;
+}
+
+.latex-display-inner {
+  display: flex;
+  justify-content: center;
+  min-width: min-content;
+}
+
+.latex-display-inner .MathJax {
+  font-style: italic !important;
+  max-width: 100%;
+}
+
+/* 确保在小屏幕上也能正常显示 */
+@media (max-width: 768px) {
+  .latex-display-container {
+    font-size: 0.9em;
+  }
+}
+
+/* 暗色模式下的样式 */
+@media (prefers-color-scheme: dark) {
+  .latex-display-container {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
 }

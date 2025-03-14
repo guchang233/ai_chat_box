@@ -58,10 +58,9 @@ const AVAILABLE_MODELS = [
     {
         id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
         name: 'DeepSeek R1 Qwen 7B',
-        description: '硅基流动的中文大模型',
+        description: '硅基流动部署的模型',
         api_url: 'https://api.siliconflow.cn/v1/chat/completions',
         api_key: 'sk-lxmwbpakbgskicxtzoqaxbzdhubfpszjfvkyoosakfzntjjj',
-        system_prompt: `今天是${currentDate}。你是由DeepSeek开发的AI助手，回答时请使用<think>标签展示思考过程。最终答案要简洁专业，使用中文回复。`,
         parameters: {
             stream_options: {
                 include_usage: true,
@@ -91,7 +90,16 @@ const CONFIG = {
     API_KEY: modelConfig.api_key,
     MODEL: modelConfig.id,
     API_ENDPOINT: modelConfig.api_url,
-    SYSTEM_PROMPT: `今天是${currentDate}。你是一个由Gu微调的AI助手，现有的ai大模型。你始终说中文...`,
+    SYSTEM_PROMPT: `今天是${currentDate}。你是一个由Gu微调的AI助手，现有的ai大模型。请遵循以下规则：
+            1. 提供准确、有用的回答
+            2. 如果不确定答案，请坦诚承认
+            3. 避免生成有害、非法或不道德的内容
+            4. 使用简洁清晰的语言
+            5. 当需要展示数学公式时，使用LaTeX格式，并将其居中显示
+            6. 对于行内公式，使用单个美元符号，如 $E=mc^2$
+            7. 对于需要单独罗列的公式，使用双美元符号，如 $$E=mc^2$$
+            8. 对于复杂的推导过程，请使用行间公式并分步骤展示
+            9. 回答使用中文`,
     AVAILABLE_MODELS: AVAILABLE_MODELS,
     
     // 切换模型的方法

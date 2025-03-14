@@ -1,5 +1,7 @@
 // 消息格式化模块
 class MessageFormatter {
+    // 修复代码块处理
+    // 在 formatMessage 方法中添加或修改 LaTeX 处理部分
     static formatMessage(text) {
         // 保护LaTeX公式，避免被Markdown解析
         const latexBlocks = [];
@@ -20,7 +22,22 @@ class MessageFormatter {
         });
         
         // 处理代码块
-        text = text.replace(/```([\s\S]*?)```/g, '<pre class="code-block">$1</pre>');
+        text = text.replace(/```(\w*)\n([\s\S]*?)```/g, function(match, language, content) {
+            const codeElement = document.createElement('pre');
+            codeElement.className = 'code-block';
+            
+            const block = document.createElement('code');
+            if (language) {
+                block.className = language;
+            }
+            block.textContent = content;
+            
+            // 使用 innerHTML 而不是直接返回字符串
+            codeElement.appendChild(block);
+            const tempDiv = document.createElement('div');
+            tempDiv.appendChild(codeElement);
+            return tempDiv.innerHTML;
+        });
         
         // 处理行内代码
         text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
@@ -112,6 +129,16 @@ class MessageFormatter {
             return `<span class="math-inline" data-latex="${encodeURIComponent(latex)}">${latex}</span>`;
         });
         
+        // 处理行间 LaTeX 公式 (双 $)，必须先处理这个，避免与行内公式冲突
+        text = text.replace(/\$\$([\s\S]+?)\$\$/g, function(match, formula) {
+            return `<div class="math-display">$$${formula}$$</div>`;
+        });
+        
+        // 处理行内 LaTeX 公式 (单个 $)
+        text = text.replace(/\$([^\$\n]+?)\$/g, function(match, formula) {
+            return `<span class="math-inline">$${formula}$</span>`;
+        });
+        
         return `<div class="markdown-content">${text}</div>`;
     }
     
@@ -156,24 +183,107 @@ class MessageFormatter {
     
         return formatted;
     }
-}
-
-
-// 查找类似这样的代码段
-function formatCodeBlock(language, content) {
-    const codeElement = document.createElement('pre');
-    codeElement.className = 'code-block';
     
-    // 这里可能是问题所在，block变量未定义就被使用
-    // codeElement.appendChild(block);
-    
-    // 修复方法：先定义block变量
-    const block = document.createElement('code');
-    if (language) {
-        block.className = language;
+    // 在 formatMessage 方法中修改 LaTeX 处理部分
+    static formatMessage(text) {
+        // 保存代码块，避免处理代码块中的数学符号
+        const codeBlocks = [];
+        text = text.replace(/```([\s\S]*?)```/g, function(match) {
+            const index = codeBlocks.length;
+            codeBlocks.push(match);
+            return `__CODE_BLOCK_${index}__`;
+        });
+        
+        // 处理行间公式（必须先处理这个，避免与行内公式冲突）
+        text = text.replace(/\$\$([\s\S]+?)\$\$/g, function(match, formula) {
+            return `<div class="latex-display-container"><div class="latex-display-inner">$$${formula}$$</div></div>`;
+        });
+        
+        // 处理行内公式
+        text = text.replace(/\$([^\$\n]+?)\$/g, function(match, formula) {
+            return `<span style="font-style:italic;">$${formula}$</span>`;
+        });
+        
+        // 恢复代码块
+        text = text.replace(/__CODE_BLOCK_(\d+)__/g, function(match, index) {
+            return codeBlocks[parseInt(index)];
+        });
+        
+        // 处理其他 Markdown 格式
+        text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+        text = text.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+        text = text.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+        text = text.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+        text = text.replace(/^\s*\* (.*$)/gm, '<li>$1</li>');
+        text = text.replace(/^\s*- (.*$)/gm, '<li>$1</li>');
+        text = text.replace(/^\s*\d+\. (.*$)/gm, '<li>$1</li>');
+        text = text.replace(/<\/li>\n<li>/g, '</li><li>');
+        text = text.replace(/<li>(.*)<\/li>/g, '<ul><li>$1</li></ul>');
+        text = text.replace(/<\/ul>\n<ul>/g, '');
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+        if (text.includes('|')) {
+            const lines = text.split('\n');
+            let inTable = false;
+            let tableHtml = '<table class="markdown-table">';
+            let isHeader = false;
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                if (line.startsWith('|') && line.endsWith('|')) {
+                    if (!inTable) {
+                        inTable = true;
+                        isHeader = true;
+                    }
+                    
+                    const cells = line.split('|').filter(cell => cell !== '');
+                    
+                    if (isHeader) {
+                        tableHtml += '<thead><tr>';
+                        cells.forEach(cell => {
+                            tableHtml += `<th>${cell.trim()}</th>`;
+                        });
+                        tableHtml += '</tr></thead><tbody>';
+                        isHeader = false;
+                    } else if (line.includes('---')) {
+                        // 这是分隔行，跳过
+                        continue;
+                    } else {
+                        tableHtml += '<tr>';
+                        cells.forEach(cell => {
+                            tableHtml += `<td>${cell.trim()}</td>`;
+                        });
+                        tableHtml += '</tr>';
+                    }
+                } else if (inTable) {
+                    tableHtml += '</tbody></table>';
+                    inTable = false;
+                    lines[i] = tableHtml + line;
+                    tableHtml = '<table class="markdown-table">';
+                }
+            }
+            
+            if (inTable) {
+                tableHtml += '</tbody></table>';
+                lines.push(tableHtml);
+            }
+            
+            text = lines.join('\n');
+        }
+        
+        text = text.replace(/\n/g, '<br>');
+        return text;
     }
-    block.textContent = content;
-    codeElement.appendChild(block);
     
-    return codeElement;
+    // 添加一个方法来刷新 MathJax 渲染
+    static refreshMathJax() {
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            setTimeout(() => {
+                window.MathJax.typesetPromise()
+                    .catch(err => console.warn('MathJax 渲染错误:', err));
+            }, 100); // 延迟一点时间确保 DOM 已更新
+        }
+    }
 }

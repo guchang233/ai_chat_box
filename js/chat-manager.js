@@ -49,7 +49,30 @@ class ChatManager {
         }
     }
     
+    // 在加载聊天历史的方法中添加 MathJax 重新渲染
     loadChatHistory() {
+        // ... 现有代码 ...
+        
+        // 重新渲染聊天界面
+        this.renderChatHistory();
+        
+        // 重新渲染 LaTeX 公式
+        this.refreshMathJax();
+    }
+    
+    // 添加一个方法来刷新 MathJax 渲染
+    refreshMathJax() {
+        if (window.MathJax && window.MathJax.typesetPromise) {
+            setTimeout(() => {
+                window.MathJax.typesetPromise()
+                    .then(() => console.log('MathJax 重新渲染完成'))
+                    .catch(err => console.warn('MathJax 渲染错误:', err));
+            }, 300); // 延迟一点时间确保 DOM 已更新
+        }
+    }
+    
+    // 在渲染聊天历史的方法结束时添加 MathJax 重新渲染
+    renderChatHistory() {
         const savedHistory = localStorage.getItem('chatHistory');
         const savedMessages = localStorage.getItem('chatMessages');
         
@@ -232,6 +255,8 @@ class ChatManager {
         }
     }
     
+    // 改进错误处理
+    // 在处理完消息后调用 MathJax 刷新
     async sendMessage() {
         if (this.isProcessing) return;
         
@@ -475,11 +500,17 @@ class ChatManager {
                 errorMessage.innerHTML = `
                     <div class="avatar">AI</div>
                     <div class="message-content">
-                        <p>抱歉，发生了错误：${e.message}</p>
-                        <p>请检查网络连接或稍后再试。如果问题持续存在，可能需要检查API配置。</p>
+                        <p>抱歉，发生了错误: ${e.message || '未知错误'}</p>
+                        <p>请检查网络连接或稍后再试。</p>
                     </div>
                 `;
                 this.chatMessages.appendChild(errorMessage);
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+                
+                // 重置状态
+                this.isProcessing = false;
+                this.uiHandler.toggleSendButton(true);
+                this.uiHandler.hideStopButton();
             }
         } finally {
             // 恢复UI状态
