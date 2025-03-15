@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI图像生成器</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>设置</h2>
+                <button id="close-sidebar" class="icon-button">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="sidebar-content">
+                <div class="settings-section">
+                    <h3>模型设置</h3>
+                    <div class="setting-item">
+                        <label for="model-select">选择模型</label>
+                        <select id="model-select" class="select-input">
+                            <option value="Kwai-Kolors/Kolors">Kwai-Kolors/Kolors</option>
+                            <option value="model2">模型2</option>
+                            <option value="model3">模型3</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="api-key">API密钥</label>
+                        <input type="password" id="api-key" class="text-input" value="sk-lxmwbpakbgskicxtzoqaxbzdhubfpszjfvkyoosakfzntjjj">
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>图像参数</h3>
+                    <div class="setting-item">
+                        <label for="image-size">图像尺寸</label>
+                        <select id="image-size" class="select-input">
+                            <option value="512x512">512x512</option>
+                            <option value="768x768">768x768</option>
+                            <option value="1024x1024" selected>1024x1024</option>
+                            <option value="1280x1280">1280x1280</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="batch-size">批次大小</label>
+                        <input type="number" id="batch-size" class="number-input" min="1" max="4" value="1">
+                    </div>
+                    <div class="setting-item">
+                        <label for="seed">种子值</label>
+                        <input type="number" id="seed" class="number-input" value="4999999999">
+                        <button id="random-seed" class="small-button">随机</button>
+                    </div>
+                    <div class="setting-item">
+                        <label for="steps">推理步数</label>
+                        <input type="range" id="steps" class="range-input" min="10" max="50" value="20">
+                        <span id="steps-value">20</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="guidance-scale">引导比例</label>
+                        <input type="range" id="guidance-scale" class="range-input" min="1" max="20" step="0.5" value="7.5">
+                        <span id="guidance-value">7.5</span>
+                    </div>
+                </div>
+                
+                <!-- 移除了上传图片部分，已移至输入区域 -->
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <header class="main-header">
+                <button id="open-sidebar" class="icon-button">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <h1>AI图像生成器</h1>
+            </header>
+
+            <div class="chat-container">
+                <div class="messages" id="messages">
+                    <div class="message system">
+                        <div class="message-content">
+                            <p>欢迎使用AI图像生成器！请输入您想要生成的图像描述。</p>
+                        </div>
+                    </div>
+                    <!-- 消息将在这里动态添加 -->
+                </div>
+
+                <div class="input-area">
+                    <div class="input-tools">
+                        <div class="upload-container">
+                            <label for="upload-image" class="upload-label">
+                                <i class="fas fa-image"></i> 上传参考图片
+                            </label>
+                            <input type="file" id="upload-image" accept="image/*" class="file-input">
+                            <button id="clear-image" class="small-button">清除图片</button>
+                        </div>
+                    </div>
+                    <div class="prompt-container">
+                        <div class="prompt-tabs">
+                            <button class="tab-button active" data-tab="prompt">正向提示词</button>
+                            <button class="tab-button" data-tab="negative">负向提示词</button>
+                        </div>
+                        <div class="tab-content active" id="prompt-tab">
+                            <textarea id="prompt-input" placeholder="描述您想要生成的图像内容..."></textarea>
+                        </div>
+                        <div class="tab-content" id="negative-tab">
+                            <textarea id="negative-input" placeholder="描述您不希望在图像中出现的内容..."></textarea>
+                        </div>
+                    </div>
+                    <div class="button-container">
+                        <button id="generate-button" class="primary-button">
+                            <i class="fas fa-magic"></i> 生成图像
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
